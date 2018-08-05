@@ -23,6 +23,8 @@
           return decodeURIComponent(results[2].replace(/\+/g, " "));
       }
 
+      numtabs = 1;
+
       function pageLoaded() {
         setTimeout(() => location.href = getParameterByName('link'), (window.ntabs - 1) * 5000);
       }
