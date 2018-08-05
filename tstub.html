@@ -22,10 +22,15 @@
           if (!results[2]) return '';
           return decodeURIComponent(results[2].replace(/\+/g, " "));
       }
+
+      function pageLoaded() {
+        console.log("printing ntabs: " + ntabs);
+      }
+
     </script>
 
   </head>
-<body style="background-color: #ccefff">
+<body style="background-color: #ccefff" onload="pageLoaded()">
   <img class="logo" src="twitter.png"
        onmouseenter="location.href = getParameterByName('link')"/>
 </body>
