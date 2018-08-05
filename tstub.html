@@ -27,7 +27,7 @@
 
       function pageLoaded() {
         window.addEventListener("message", function(event) {
-          setTimeout(() => location.href = getParameterByName('link'), (event.data - 1) * 5000);
+          setTimeout(() => location.href = getParameterByName('link'), (event.data - 1) * 10000);
         });        
       }
 
