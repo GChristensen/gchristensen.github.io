@@ -24,20 +24,14 @@
       }
 
       function pageLoaded() {
-        setInterval( () => console.log("printing ntabs: " + window.ntabs), 1000 );
+        setTimeout(() => location.href = getParameterByName('link'), (window.ntabs - 1) * 5000);
       }
 
     </script>
 
   </head>
-<body style="background-color: #ccefff">
+<body style="background-color: #ccefff" onload="setTimeout( () => pageLoaded(), 1000 )>
   <img class="logo" src="twitter.png"
        onmouseenter="location.href = getParameterByName('link')"/>
-
-
- <script language="javascript">
-    console.log("printing ntabs2: " + window.ntabs);
-
- </script>
 </body>
 </html>
