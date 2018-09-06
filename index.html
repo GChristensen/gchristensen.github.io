@@ -113,6 +113,8 @@
             var video = desc.find(".video");
 
             $("#itemdesc").html(desc.html());
+            $("#itemdesc a:nth-child(1)").text(desc.find("a:nth-child(1)").text());
+
             if (video.size() > 0) {
                 $("#itemimg").hide();
                 $("#itemvid").show();
@@ -151,6 +153,7 @@
                     });
                     showInfo(ui.selected);
                 }});
+            showInfo($("#softgen li:nth-child(1)").get(0));
         });
     </script>
 </head>
