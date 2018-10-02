@@ -127,13 +127,13 @@
 
             if (video.size() > 0) {
                 $("#itemimg").hide();
-                $("#itemvid").show();
                 $("#itemvid iframe").attr("src", video.attr("href"));
+                $("#itemvid").show();
             }
             else {
                 $("#itemvid").hide();
-                $("#itemimg").show();
                 $("#itemimg img").attr("src", desc.find(".image").attr("href"));
+                $("#itemimg").show();
             }
         }
 
@@ -251,7 +251,7 @@
                 management program
             </li>
             <li data-hash="slideshow"><a href="https://github.com/GChristensen/advanced-slideshow-gadget#readme" target="_blank">Advanced
-                SlideShow Gadget (Github)</a><a href="https://github.com/GChristensen/advanced-slideshow-gadget/raw/master/screen.jpg" target="_blank" class="image"></a></li>
+                SlideShow Gadget (Github)</a><a href="https://github.com/GChristensen/advanced-slideshow-gadget/." target="_blank" class="video"></a></li>
             <li data-hash="sunlight"><a href="https://github.com/GChristensen/sunlight-world-map-gadget#readme" target="_blank">Sunlight World
                 Map Gadget (Github)</a><a href="https://github.com/GChristensen/sunligth-world-map-gadget/raw/master/screen.png" target="_blank" class="image"></a></li>
 
