@@ -69,7 +69,7 @@
         }
 
         #left {
-            flex: 0 0 content;
+            flex: 0 0 auto;
             padding-right: 10px;
             border-right: 1px solid black;
         }
@@ -131,7 +131,6 @@
             color: dagr;
         }
 
-
         li {
             cursor: pointer;
         }
@@ -168,11 +167,24 @@
                 $("#itemvid").hide();
                 $("#itemimg").hide();
                 $("#loading").show();
-                $.get(desc.find(".image").attr("href"), function (data) {
+                var url = desc.find(".image").attr("href");
+                $.get(url, function (data) {
                     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
-                    $("#itemimg").html(data);
-                    $("#loading").hide();
-                    $("#itemimg").show();
+                    console.log(url);
+                    console.log(/^https?:\/\/.*/.test(url))
+                    if (/^https?:\/\/.*/.test(url)) {
+                        data = "data:text/html;charset=utf-8," + encodeURI(data);
+                        $("#itemvid iframe").attr("src", data);
+console.log("nyaa");
+                        //$("#itemimg").html(data);
+                        $("#loading").hide();
+                        $("#itemvid").show();
+                    }
+                    else {
+                        $("#itemimg").html(data);
+                        $("#loading").hide();
+                        $("#itemimg").show();
+                    }
                 });
             }
         }
@@ -298,9 +310,9 @@
             <li data-hash="sunlight"><a href="https://github.com/GChristensen/sunlight-world-map-gadget#readme" target="_blank">Sunlight World
                 Map Gadget (Github)</a><a href="software/sunlight.html" target="_blank" class="image"></a></li>
 
-            <li data-hash="torrent-add"><a href="https://github.com/GChristensen/torrent-add#readme" target="_blank">Add Torrent (Github)</a>
-                <a href="software/torrent-add.html" target="_blank" class="image"></a>
-                - instantly add torrents into specified directories from Firefox to uTorrent
+            <li data-hash="torrent-add"><a href="https://gchristensen.github.io/torrent-add/" target="_blank">Add Torrent (Github)</a>
+                <a href="https://gchristensen.github.io/torrent-add/" target="_blank" class="image"></a>
+                - instantly add torrents into the customizable set of directories from Firefox to uTorrent
             </li>
         </ul>
         <h3>Development Tools</h3>
