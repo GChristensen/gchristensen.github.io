@@ -170,12 +170,15 @@
                 var url = desc.find(".image").attr("href");
                 $.get(url, function (data) {
                     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
-                    console.log(url);
-                    console.log(/^https?:\/\/.*/.test(url))
-                    if (/^https?:\/\/.*/.test(url)) {
+                       if (/^https?:\/\/.*/.test(url)) {
+                        var full = location.protocol + '//' + location.hostname
+                                 + (location.port ? ':' + location.port: '');
+                        console.log(full);
+                        data = data.replace("<head>", "<head><base href='" + full + "'>");
+
+
                         data = "data:text/html;charset=utf-8," + encodeURI(data);
                         $("#itemvid iframe").attr("src", data);
-console.log("nyaa");
                         //$("#itemimg").html(data);
                         $("#loading").hide();
                         $("#itemvid").show();
