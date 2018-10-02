@@ -176,7 +176,7 @@
 
                         data = data.replace("<head>", "<head><base href='" + full + "'>");
                         console.log(data);
-                        data = "data:text/html;charset=utf-8," + encodeURI(data);
+                        data = "data:text/html;charset=utf-8," + encodeURIComponent(data);
                         $("#itemvid iframe").attr("src", data);
                         //$("#itemimg").html(data);
                         $("#loading").hide();
