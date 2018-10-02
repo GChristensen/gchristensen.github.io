@@ -80,6 +80,11 @@
             flex: 1 1 auto;
         }
 
+        #loading {
+            display: none;
+            padding: 10px;
+        }
+
         #itemdesc {
             flex: none;
             padding: 10px;
@@ -151,14 +156,22 @@
 
             if (video.size() > 0) {
                 $("#itemimg").hide();
+                $("#itemvid").hide();
+                $("#loading").show();
                 $("#itemvid iframe").attr("src", video.attr("href"));
-                $("#itemvid").show();
+                $("#itemvid iframe").load(function() {
+                    $("#loading").hide();
+                    $("#itemvid").show();
+                });
             }
             else {
                 $("#itemvid").hide();
+                $("#itemimg").hide();
+                $("#loading").show();
                 $.get(desc.find(".image").attr("href"), function (data) {
                     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
                     $("#itemimg").html(data);
+                    $("#loading").hide();
                     $("#itemimg").show();
                 });
             }
@@ -243,6 +256,9 @@
             </div>
             <div id="itemimg">
                 <img src="">
+            </div>
+            <div id="loading">
+                Loading...
             </div>
         </div>
     </div>
