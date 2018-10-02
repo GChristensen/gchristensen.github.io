@@ -173,10 +173,9 @@
                        if (/^https?:\/\/.*/.test(url)) {
                         var full = location.protocol + '//' + location.hostname
                                  + (location.port ? ':' + location.port: '');
-                        console.log(full);
+
                         data = data.replace("<head>", "<head><base href='" + full + "'>");
-
-
+                        console.log(data);
                         data = "data:text/html;charset=utf-8," + encodeURI(data);
                         $("#itemvid iframe").attr("src", data);
                         //$("#itemimg").html(data);
