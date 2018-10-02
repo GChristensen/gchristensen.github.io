@@ -132,8 +132,11 @@
             }
             else {
                 $("#itemvid").hide();
-                $("#itemimg img").attr("src", desc.find(".image").attr("href"));
-                $("#itemimg").show();
+                $.get(desc.find(".image").attr("href"), function (data) {
+                    //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
+                    $("#itemimg").html(data);
+                    $("#itemimg").show();
+                });
             }
         }
 
@@ -251,7 +254,7 @@
                 management program
             </li>
             <li data-hash="slideshow"><a href="https://github.com/GChristensen/advanced-slideshow-gadget#readme" target="_blank">Advanced
-                SlideShow Gadget (Github)</a><a href="software/slideshow.html" target="_blank" class="video"></a></li>
+                SlideShow Gadget (Github)</a><a href="software/slideshow.html" target="_blank" class="image"></a></li>
             <li data-hash="sunlight"><a href="https://github.com/GChristensen/sunlight-world-map-gadget#readme" target="_blank">Sunlight World
                 Map Gadget (Github)</a><a href="https://github.com/GChristensen/sunligth-world-map-gadget/raw/master/screen.png" target="_blank" class="image"></a></li>
 
