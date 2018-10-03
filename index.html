@@ -5,7 +5,7 @@
     <title>Software by gchristnsn</title>
     <style>
         body {
-            font-family: Helveticz, Arial, sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
             overflow: hidden;
         }
 
@@ -19,11 +19,11 @@
 
         h2 {
             font-size: 14pt;
-            padding-left: 0;
         }
 
         h3 {
             font-size: 12pt;
+            margin-bottom: 5px;
         }
 
         h4 {
@@ -42,6 +42,7 @@
         ul {
             list-style: none;
             padding-left: 20px;
+            margin-top: 5px;
         }
 
         #content {
@@ -54,25 +55,58 @@
             left: 0;
         }
 
-        #main-header {
-            flex: none;
-            display: inline-block;
-            /*padding-left: 10px;*/
-            /*border-bottom: 1px solid black;*/
-            margin-bottom: 0;
-            padding-bottom: 5px;
-        }
-
         #cntnr {
             display: flex;
             flex: 1 1 auto;
-            padding-left: 10px;
         }
 
         #left {
             flex: 0 0 auto;
             padding-right: 10px;
-            /*border-right: 1px solid black;*/
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        #main-header {
+            text-transform: none;
+            font-size: 14pt;
+            padding: 10px;
+            margin-top: 0;
+            margin-bottom: 0;
+            color: white;
+            background-color: black;
+            flex: none;
+            display: inline-block;
+            /*padding-left: 10px;*/
+            /*border-bottom: 1px solid black;*/
+            /*padding-bottom: 5px;*/
+        }
+
+        #mnu {
+            color: white;
+            background-color: #191919;
+            padding-left: 10px;
+            flex: 1 1 100%;
+            padding-right: 10px;
+            font-size: 14px;
+            min-height: 0;
+            overflow: auto;
+            /*height: 100%;*/
+        }
+
+        #mnu li {
+            /*padding: 2px;*/
+            /*color: #119bdf;*/
+        }
+
+        #mnu h3 {
+            /*color: #52ce0e;*/
+        }
+
+        #mnu h4 {
+            /*color: #e08f10;*/
+            /*color: #e02a10;*/
         }
 
         #right {
@@ -136,8 +170,8 @@
             cursor: pointer;
         }
 
-        .ui-selecting { background: #bebebe; color: white; }
-        .ui-selected { background: #8a8a8a; color: white; }
+        .ui-selecting { background: #101010; color: white; }
+        .ui-selected { background: black; color: white; }
     </style>
 
     <link rel="stylesheet" href="js/jquery-ui/jquery-ui.min.css">
@@ -226,35 +260,38 @@
 
     <div id="cntnr">
         <div id="left">
-            <h2 id="main-header">Software by GChristnsn</h2>
-            <h3>General Purpose</h3>
-                <ul id="softgen">
-                    <li class="ui-selected" data-hash="enso">&raquo; Enso open-source</li>
-                    <li data-hash="retreat">&raquo; Enso Retreat</li>
-                    <li data-hash="silentnight">&raquo; Silent Night Mod</li>
-                    <li data-hash="feedxcavator2">&raquo; Feedxcavator</li>
-                    <div class="unselectable" style="position: relative;">
-                        <h4 class="unselectable">Firefox Add-Ons</h4>
-                        <ul id="wingadgets" class="unselectable">
-                            <li data-hash="ubiquitywe">&raquo; Ubiquity WebExtension</li>
-                            <li data-hash="darkflow">&raquo; Dark Flow</li>
-                            <li data-hash="torrent-add">&raquo; Add Torrent</li>
-                        </ul>
-                    </div>
+            <!--h2 id="main-header">Software by GChristnsn</h2-->
+            <h2 id="main-header"><img src="fa_dense_wh.png"> Software by g/christensen</h2>
+            <div id="mnu">
+                <h3>General Purpose</h3>
+                    <ul id="softgen">
+                        <li class="ui-selected" data-hash="enso">&#x2726; Enso open-source</li>
+                        <li data-hash="retreat">&#x2726; Enso Retreat</li>
+                        <li data-hash="silentnight">&#x2726; Silent Night Mod</li>
+                        <li data-hash="feedxcavator2">&#x2726; Feedxcavator</li>
+                        <div class="unselectable" style="position: relative;">
+                            <h4 class="unselectable">Firefox Add-Ons</h4>
+                            <ul id="wingadgets" class="unselectable">
+                                <li data-hash="ubiquitywe">&#x2726; Ubiquity WebExtension</li>
+                                <li data-hash="darkflow">&#x2726; Dark Flow</li>
+                                <li data-hash="torrent-add">&#x2726; Add Torrent</li>
+                            </ul>
+                        </div>
 
-                    <div class="unselectable" style="position: relative;">
-                        <h4 class="unselectable">Windows Desktop Gadgets</h4>
-                        <ul id="wingadgets" class="unselectable">
-                            <li data-hash="slideshow">&raquo; Advanced SlideShow Gadget</li>
-                            <li data-hash="sunlight">&raquo; Sunlight World Map Gadget</li>
-                        </ul>
-                    </div>
+                        <div class="unselectable" style="position: relative;">
+                            <h4 class="unselectable">Windows Desktop Gadgets</h4>
+                            <ul id="wingadgets" class="unselectable">
+                                <li data-hash="slideshow">&#x2726; Advanced SlideShow Gadget</li>
+                                <li data-hash="sunlight">&#x2726; Sunlight World Map Gadget</li>
+                            </ul>
+                        </div>
+                    </ul>
+                <h3>Development Tools</h3>
+                <ul id="softdev">
+                    <li data-hash="rho">&#x2726; Rho Emacs</li>
+                    <li data-hash="lispx">&#x2726; Lisp Execution Proxy</li>
                 </ul>
-            <h3>Development Tools</h3>
-            <ul id="softdev">
-                <li data-hash="rho">&raquo; Rho Emacs</li>
-                <li data-hash="lispx">&raquo; Lisp Execution Proxy</li>
-            </ul>
+            </div>
         </div>
 
         <div id="right">
@@ -280,7 +317,7 @@
         <h3>General Purpose</h3>
         <ul>
             <li data-hash="enso"><a href="https://github.com/GChristensen/enso-portable#readme" target="_blank">Enso open-source (Github)</a>
-                <a href="https://gchristensen.github.io/enso-portable" target="_blank" class="image" title="Watch on YouTube">&#x1F3AC;</a>
+                <a href="https://gchristensen.github.io/enso-portable/" target="_blank" class="image" title="Watch on YouTube">&#x1F3AC;</a>
                 - a
                 portable fork of <b>Humanized Enso Launcher community edition</b> with additional commands</li>
             <li data-hash="ubiquitywe"><a href="https://github.com/GChristensen/ubiquitywe#readme" target="_blank">Ubiquity WebExtension (Github)</a>
