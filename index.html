@@ -206,6 +206,8 @@
                 var url = desc.find(".image").attr("href");
 
                 $("#itemvid iframe").attr("src", url);
+                $("#loading").hide();
+                $("#itemvid").show();
 
                 // $.get(url, function (data) {
                 //     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
