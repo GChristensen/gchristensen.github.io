@@ -204,25 +204,28 @@
                 $("#itemimg").hide();
                 $("#loading").show();
                 var url = desc.find(".image").attr("href");
-                $.get(url, function (data) {
-                    //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
-                       if (/^https?:\/\/.*/.test(url)) {
-                        var full = location.protocol + '//' + location.hostname
-                                 + (location.port ? ':' + location.port: '');
 
-                        data = data.replace("<head>", "<head><base href='" + full + "'>");
-                        data = "data:text/html;charset=utf-8," + encodeURIComponent(data);
-                        $("#itemvid iframe").attr("src", data);
-                        //$("#itemimg").html(data);
-                        $("#loading").hide();
-                        $("#itemvid").show();
-                    }
-                    else {
-                        $("#itemimg").html(data);
-                        $("#loading").hide();
-                        $("#itemimg").show();
-                    }
-                });
+                $("#itemvid iframe").attr("src", url);
+
+                // $.get(url, function (data) {
+                //     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
+                //        if (/^https?:\/\/.*/.test(url)) {
+                //         var full = location.protocol + '//' + location.hostname
+                //                  + (location.port ? ':' + location.port: '');
+                //
+                //         data = data.replace("<head>", "<head><base href='" + full + "'>");
+                //         data = "data:text/html;charset=utf-8," + encodeURIComponent(data);
+                //         $("#itemvid iframe").attr("src", data);
+                //         //$("#itemimg").html(data);
+                //         $("#loading").hide();
+                //         $("#itemvid").show();
+                //     }
+                //     else {
+                //         $("#itemimg").html(data);
+                //         $("#loading").hide();
+                //         $("#itemimg").show();
+                //     }
+                // });
             }
         }
 
