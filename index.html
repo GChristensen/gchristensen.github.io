@@ -253,7 +253,15 @@
                     });
                     showInfo(ui.selected);
                 }});
-            showInfo($("#softgen li:nth-child(1)").get(0));
+
+            if (location.hash) {
+                $(".ui-selected").removeClass("ui-selected");
+                var item = $("#softgen li[data-hash='" + location.hash.substring(1) + "']");
+                item.addClass("ui-selected");
+                showInfo(item.get(0));
+            }
+            else
+                showInfo($("#softgen li:nth-child(1)").get(0));
         });
     </script>
 </head>
