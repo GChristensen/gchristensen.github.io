@@ -68,7 +68,6 @@
             background-color: #191919;
         }
 
-
         #main-header {
             text-transform: none;
             font-size: 14pt;
@@ -114,6 +113,7 @@
             display: flex;
             flex-direction: column;
             flex: 1 1 auto;
+            position: relative;
         }
 
         #loading {
@@ -121,32 +121,22 @@
             padding: 20px;
         }
 
-        #itemdesc {
-            flex: none;
-            padding: 10px;
-            background-color: lightgray;
-        }
-
-        #itemvid, #itemimg {
+        #itemframe {
             flex: 1 1 auto;
             padding: 10px;
         }
 
-        #itemvid {
+        #itemframe {
             display: flex;
             flex-direction: column;
         }
 
-        #itemvid iframe {
+        #itemframe iframe {
             flex: 1 1 auto;
         }
 
-        #itemsinfo, #itemimg {
-            display: none;
-        }
-
         .software {
-            font-family: Helveticz, Arial, sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
             font-size: small;
             color: black;
         }
@@ -171,6 +161,29 @@
             cursor: pointer;
         }
 
+        .centering-container {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .centering-flex-container {
+            /*margin: 10px;*/
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            /* for Firefox */
+            min-height: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
         .ui-selecting { background: #101010; color: white; }
         .ui-selected { background: black; color: white; }
     </style>
@@ -182,48 +195,15 @@
     <script type="application/javascript">
 
         function showInfo(e) {
-            var selector = "#itemsinfo *[data-hash='" + e.getAttribute("data-hash") + "']";
-            var desc = $(selector);
-            var video = desc.find(".video");
-
-            //$("#itemdesc").html(desc.html());
-            //$("#itemdesc a:nth-child(1)").text(desc.find("a:nth-child(1)").text());
-
-            if (video.size() > 0) {
-                $("#itemimg").hide();
-                $("#itemvid").hide();
-                $("#loading").show();
-                $("#itemvid iframe").attr("src", video.attr("href"));
-                $("#itemvid iframe").load(function() {
+            var url = $(e).attr("data-url");
+            if (url) {
+                $("#itemframe").hide();
+                $("#loading").css("display", "flex");
+                $("#itemframe iframe").attr("src", url);
+                $("#itemframe iframe").load(function() {
                     $("#loading").hide();
-                    $("#itemvid").show();
+                    $("#itemframe").show();
                 });
-            }
-            else {
-                // $("#itemvid").hide();
-                // $("#itemimg").hide();
-                // $("#loading").show();
-                // var url = desc.find(".image").attr("href");
-
-                // $.get(url, function (data) {
-                //     //$("#itemimg img").attr("src", desc.find(".image").attr("href"));
-                //        if (/^https?:\/\/.*/.test(url)) {
-                //         var full = location.protocol + '//' + location.hostname
-                //                  + (location.port ? ':' + location.port: '');
-                //
-                //         data = data.replace("<head>", "<head><base href='" + full + "'>");
-                //         data = "data:text/html;charset=utf-8," + encodeURIComponent(data);
-                //         $("#itemvid iframe").attr("src", data);
-                //         //$("#itemimg").html(data);
-                //         $("#loading").hide();
-                //         $("#itemvid").show();
-                //     }
-                //     else {
-                //         $("#itemimg").html(data);
-                //         $("#loading").hide();
-                //         $("#itemimg").show();
-                //     }
-                // });
             }
         }
 
@@ -272,6 +252,11 @@
         <div id="left" style="position: relative;">
             <!--h2 id="main-header">Software by GChristnsn</h2-->
             <h2 id="main-header"><img src="fa_dense_wh.png"> Software by g/christensen</h2>
+
+            <img src="logo.png" style="position: absolute; right: 15px; bottom: 10px;">
+            <a href="http://thenewkinetic.blogspot.com" style="color: white; position: absolute; right: 45px; bottom: 5px; z-index: 10000;"
+               target="_blank"><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>
+
             <div id="mnu">
                 <div style="position: relative"><h3>General Purpose</h3>
                     <div id="donate" style="height: 18px; display: flex; position: absolute; right: 0; top: 0;
@@ -280,111 +265,48 @@
                             <img src="images/donate.png">&nbsp;<img src="images/patreon-logo.png"></a></div>
                 </div>
                     <ul id="softgen">
-                        <li class="ui-selected" data-hash="enso">&#x2726; Enso open-source</li>
-                        <li data-hash="retreat">&#x2726; Enso Retreat</li>
-                        <li data-hash="silentnight">&#x2726; Silent Night Mod</li>
-                        <li data-hash="feedxcavator2">&#x2726; Feedxcavator</li>
+                        <li class="ui-selected" data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso open-source</li>
+                        <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
+                        <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
+                        <li data-hash="feedxcavator2" data-url="https://gchristensen.github.io/feedxcavator2/">&#x2726; Feedxcavator</li>
                         <div class="unselectable" style="position: relative;">
                             <h4 class="unselectable">Firefox/Chrome Add-Ons</h4>
                             <ul id="addons" class="unselectable">
-                                <li data-hash="ubiquitywe">&#x2726; Ubiquity WebExtension</li>
-                                <li data-hash="scrapyard">&#x2726; Scrapyard</li>
-                                <li data-hash="darkflow">&#x2726; Dark Flow</li>
-                                <li data-hash="torrent-add">&#x2726; Add Torrent</li>
+                                <li data-hash="ubiquitywe" data-url="https://gchristensen.github.io/ubiquitywe/">&#x2726; Ubiquity WebExtension</li>
+                                <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
+                                <li data-hash="darkflow" data-url="https://gchristensen.github.io/dark-flow/">&#x2726; Dark Flow</li>
+                                <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">&#x2726; Add Torrent</li>
                             </ul>
                         </div>
 
                         <div class="unselectable" style="position: relative;">
                             <h4 class="unselectable">Windows Desktop Gadgets</h4>
                             <ul id="wingadgets" class="unselectable">
-                                <li data-hash="slideshow">&#x2726; Advanced SlideShow Gadget</li>
-                                <li data-hash="sunlight">&#x2726; Sunlight World Map Gadget</li>
+                                <li data-hash="slideshow" data-url="software/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
+                                <li data-hash="sunlight" data-url="software/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
                             </ul>
                         </div>
                     </ul>
                 <h3>Development Tools</h3>
                 <ul id="softdev">
-                    <li data-hash="rho">&#x2726; Rho Emacs</li>
-                    <li data-hash="lispx">&#x2726; Lisp Execution Proxy</li>
+                    <li data-hash="rho" data-url="https://rho-emacs.sourceforge.io/">&#x2726; Rho Emacs</li>
+                    <li data-hash="lispx" data-url="https://lispx-proxy.sourceforge.io/">&#x2726; Lisp Execution Proxy</li>
                 </ul>
 
             </div>
-            <img src="logo.png" style="position: absolute; right: 15px; bottom: 10px;">
-            <a href="http://thenewkinetic.blogspot.com" style="color: white; position: absolute; right: 45px; bottom: 5px; z-index: 1000;" target="_blank"
-                ><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>
+
         </div>
 
         <div id="right">
-            <!--div id="itemdesc">
-                <a href="https://github.com/GChristensen/enso-portable#readme" target="_blank">Enso Portable</a>
-                <a href="https://www.youtube.com/embed/QFXBp2vuEEA" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - a
-                portable version of <b>Humanized Enso Launcher community edition</b> with additional commands
-            </div-->
-            <div id="itemvid">
+            <div id="itemframe">
                 <iframe width="100%" height="100%" src="#" frameborder="0" allowfullscreen></iframe>
             </div>
-            <div id="itemimg">
-                <img src="">
-            </div>
-            <div id="loading">
-                Loading...
+            <div id="loading" class="centering-container">
+                <div class="centering-flex-container">
+                    <img src="/images/loading.gif" style="width: 103px; height: 103px">
+                </div>
             </div>
         </div>
-    </div>
-
-    <div id="itemsinfo">
-        <h3>General Purpose</h3>
-        <ul>
-            <li data-hash="enso"><a href="https://github.com/GChristensen/enso-portable#readme" target="_blank">Enso open-source (Github)</a>
-                <a href="https://gchristensen.github.io/enso-portable/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - a
-                portable fork of <b>Humanized Enso Launcher community edition</b> with additional commands</li>
-            <li data-hash="ubiquitywe"><a href="https://github.com/GChristensen/ubiquitywe#readme" target="_blank">Ubiquity WebExtension (Github)</a>
-                <a href="https://gchristensen.github.io/ubiquitywe/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - Ubiquity Firefox Add-on equivalent for WebExtension APIs</li>
-            <li data-hash="scrapyard"><a href="https://github.com/GChristensen/scrapyard#readme" target="_blank">Scrapyard (Github)</a>
-                <a href="https://gchristensen.github.io/scrapyard/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                </li>
-            <li data-hash="darkflow"><a href="https://github.com/GChristensen/dark-flow#readme" target="_blank">Dark Flow (Github)</a>
-                <a href="https://gchristensen.github.io/dark-flow/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - an advanced
-                imageboard aggregator
-            </li>
-            <li data-hash="silentnight"><a href="https://github.com/GChristensen/silentnight_v6_mod_foobar2000_skin#readme" target="_blank">Modded
-                Silent Night foobar2000 skin (Github)</a>
-                <a href="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - <b>Silent Night</b> version that uses directory explorer tree instead of the
-                media library filter</li>
-            <li data-hash="feedxcavator2"><a href="https://github.com/GChristensen/feedxcavator2#readme" target="_blank">feedxcavator2 (Github)</a>
-                <a href="https://gchristensen.github.io/feedxcavator2/" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - a
-                programmable, GAE-hosted HTML to RSS converter&nbsp;
-            </li>
-            <li data-hash="retreat"><a href="http://retreat.sourceforge.net/" target="_blank">Enso Retreat (Sourceforge)</a>
-                <a href="https://gchristensen.github.io/retreat" target="_blank" class="video" title="Watch on YouTube">&#x1F3AC;</a>
-                - a simple work regime
-                management program
-            </li>
-            <li data-hash="slideshow"><a href="https://github.com/GChristensen/advanced-slideshow-gadget#readme" target="_blank">Advanced
-                SlideShow Gadget (Github)</a><a href="software/slideshow.html" target="_blank" class="video"></a></li>
-            <li data-hash="sunlight"><a href="https://github.com/GChristensen/sunlight-world-map-gadget#readme" target="_blank">Sunlight World
-                Map Gadget (Github)</a><a href="software/sunlight.html" target="_blank" class="video"></a></li>
-
-            <li data-hash="torrent-add"><a href="https://gchristensen.github.io/torrent-add/" target="_blank">Add Torrent (Github)</a>
-                <a href="https://gchristensen.github.io/torrent-add/" target="_blank" class="video"></a>
-                - instantly add torrents into the customizable set of directories from Firefox to uTorrent
-            </li>
-        </ul>
-        <h3>Development Tools</h3>
-        <ul>
-            <li data-hash="rho"><a href="https://rho-emacs.sourceforge.io/" target="_blank">Rho Emacs (Sourceforge)</a>
-             <a href="https://rho-emacs.sourceforge.io/" target="_blank" class="video" ></a>
-             - a preconfigured <b>Emacs</b> distribution for <b>Clojure/Racket/Lisp</b> development on <b>Windows</b></li>
-            <li  data-hash="lispx"><a href="https://lispx-proxy.sourceforge.io/" target="_blank"> Lisp Execution Proxy (Sourceforge)</a>
-            <a href="https://lispx-proxy.sourceforge.io" target="_blank" class="video" ></a>
-             - a tool that allows to create Clojure/Lisp source distributions that could be launched with zero configuration on <b>Windows</b>, <b>Linux</b> and <b>MacOS</b></li>
-        </ul>
     </div>
 </div>
 
