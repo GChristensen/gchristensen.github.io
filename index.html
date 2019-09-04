@@ -229,7 +229,7 @@
 
             if (location.hash) {
                 $(".ui-selected").removeClass("ui-selected");
-                var item = $("#softgen li[data-hash='" + location.hash.substring(1) + "']");
+                var item = $(".softlist li[data-hash='" + location.hash.substring(1) + "']");
                 item.addClass("ui-selected");
                 showInfo(item.get(0));
             }
@@ -253,14 +253,14 @@
                         <a style="color: white; text-decoration: none; display: inline-block" href="https://www.patreon.com/gchristnsn" target="_blank">
                             <img src="images/donate.png">&nbsp;<img src="images/patreon-logo.png"></a></div>
                 </div>
-                    <ul id="softgen">
+                    <ul id="softgen" class="softlist">
                         <li class="ui-selected" data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso open-source</li>
                         <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
                         <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
                         <li data-hash="feedxcavator2" data-url="https://gchristensen.github.io/feedxcavator2/">&#x2726; Feedxcavator</li>
                         <div class="unselectable" style="position: relative;">
                             <h4 class="unselectable">Firefox/Chrome Add-Ons</h4>
-                            <ul id="addons" class="unselectable">
+                            <ul id="addons" class="unselectable" class="softlist">
                                 <li data-hash="ubiquitywe" data-url="https://gchristensen.github.io/ubiquitywe/">&#x2726; Ubiquity WebExtension</li>
                                 <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
                                 <li data-hash="darkflow" data-url="https://gchristensen.github.io/dark-flow/">&#x2726; Dark Flow</li>
@@ -270,22 +270,22 @@
 
                         <div class="unselectable" style="position: relative;">
                             <h4 class="unselectable">Windows Desktop Gadgets</h4>
-                            <ul id="wingadgets" class="unselectable">
+                            <ul id="wingadgets" class="unselectable" class="softlist">
                                 <li data-hash="slideshow" data-url="software/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
                                 <li data-hash="sunlight" data-url="software/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
                             </ul>
                         </div>
                     </ul>
                 <h3>Development Tools</h3>
-                <ul id="softdev">
+                <ul id="softdev" class="softlist">
                     <li data-hash="rho" data-url="https://rho-emacs.sourceforge.io/">&#x2726; Rho Emacs</li>
                     <li data-hash="lispx" data-url="https://lispx-proxy.sourceforge.io/">&#x2726; Lisp Execution Proxy</li>
                 </ul>
 
                 <h3 class="blog-heading">Blogs</h3>
-                <ul id="blogs">
+                <ul id="blogs" class="softlist">
                     <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">&#x2726; Technical Posts</li>
-                    <li data-hash="posts" data-url="https://thenewkinetic.blogspot.com">&#x2726; The New Kinetic</li>
+                    <li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">&#x2726; The New Kinetic</li>
                 </ul>
             </div>
 
