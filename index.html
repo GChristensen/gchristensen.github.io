@@ -79,9 +79,12 @@
             flex: none;
             display: flex;
             align-items: center;
-            /*padding-left: 10px;*/
-            /*border-bottom: 1px solid black;*/
-            /*padding-bottom: 5px;*/
+        }
+
+        .blog-heading {
+            width: 100%;
+            padding-top: 10px;
+            border-top: 1px solid white;
         }
 
         #mnu {
@@ -96,22 +99,6 @@
             height: 0;
             overflow-y: auto;
             overflow-x: hidden;
-
-            /*height: 100%;*/
-        }
-
-        #mnu li {
-            /*padding: 2px;*/
-            /*color: #119bdf;*/
-        }
-
-        #mnu h3 {
-            /*color: #52ce0e;*/
-        }
-
-        #mnu h4 {
-            /*color: #e08f10;*/
-            /*color: #e02a10;*/
         }
 
         #right {
@@ -215,10 +202,12 @@
         }
 
         $(function() {
-            $("#mnu").prepend('<img src="logo.png" style="position: absolute; right: 15px; bottom: 10px;">'
-                + '<a href="http://thenewkinetic.blogspot.com" style="color: white; position: absolute; right: 45px; bottom: 5px; z-index: 10001;"'
-                + 'target="_blank"><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>');
+            new SimpleBar($('#mnu')[0]);
 
+            $("#mnu").prepend('<img src="logo.png" style="position: absolute; right: 15px; bottom: 0;">'
+            //    + '<a href="http://thenewkinetic.blogspot.com" style="color: white; position: absolute; right: 45px; bottom: 5px; z-index: 10001;"'
+            //    + 'target="_blank"><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>'
+            );
 
             $( "#softgen" ).selectable({filter: ":not(.unselectable)",
                 selected: function( event, ui ) {
@@ -229,15 +218,7 @@
                     console.log(ui.selected);
                     showInfo(ui.selected);
                 }});
-            $( "#wingadgets" ).selectable({
-                selected: function( event, ui ) {
-                    $('.ui-selected').each(function () {
-                        if (this !== ui.selected)
-                            $(this).removeClass("ui-selected");
-                    });
-                    showInfo(ui.selected);
-                }});
-            $( "#softdev" ).selectable({
+            $( "#wingadgets, #softdev, #blogs" ).selectable({
                 selected: function( event, ui ) {
                     $('.ui-selected').each(function () {
                         if (this !== ui.selected)
@@ -265,7 +246,7 @@
             <!--h2 id="main-header">Software by GChristnsn</h2-->
             <h2 id="main-header"><img src="fa_dense_wh.png">&nbsp;Software by g/christensen</h2>
 
-            <div id="mnu" data-simplebar>
+            <div id="mnu">
                 <div style="position: relative"><h3>General Purpose</h3>
                     <div id="donate" style="height: 18px; display: flex; position: absolute; right: 0; top: 0;
                     line-height: 18px; align-items: center;">
@@ -299,6 +280,12 @@
                 <ul id="softdev">
                     <li data-hash="rho" data-url="https://rho-emacs.sourceforge.io/">&#x2726; Rho Emacs</li>
                     <li data-hash="lispx" data-url="https://lispx-proxy.sourceforge.io/">&#x2726; Lisp Execution Proxy</li>
+                </ul>
+
+                <h3 class="blog-heading">Blogs</h3>
+                <ul id="blogs">
+                    <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">&#x2726; Technical Posts</li>
+                    <li data-hash="posts" data-url="http://thenewkinetic.blogspot.com">&#x2726; The New Kinetic</li>
                 </ul>
             </div>
 
