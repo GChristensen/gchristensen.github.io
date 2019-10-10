@@ -215,17 +215,4 @@
         e.preventDefault();
         window.parent.postMessage({type: "select", hash: (e.target.parentNode.href || e.target.href).split("#")[1]}, "*");
     });
-
-    // $.get("/index.html", null, function (data) {
-    //     var hashes = {};
-    //     $(data).find("*[data-hash]").get().forEach(function (e) {
-    //         hashes[e.getAttribute("data-hash")] = e.getAttribute("data-url");
-    //     });
-    //
-    //     console.log(hashes);
-    //     $(".main-column").on("click",  ".item-link", function (e) {
-    //         e.preventDefault();
-    //         window.location.href = hashes[e.target.parentNode.href.split("#")[1]];
-    //     });
-    // }, "html");
 </script>
