@@ -213,7 +213,7 @@
 <script type="application/javascript">
     $(".main-column").on("click",  ".item-link", function (e) {
         e.preventDefault();
-        window.parent.postMessage({type: "select", hash: hashes[e.target.parentNode.href.split("#")[1]]}, "*");
+        window.parent.postMessage({type: "select", hash: (e.target.parentNode.href || e.target.href).split("#")[1]}, "*");
     });
 
     // $.get("/index.html", null, function (data) {
