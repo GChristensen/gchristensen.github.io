@@ -211,7 +211,10 @@
 <script type="application/javascript" src="/js/jquery-ui/external/jquery/jquery.js"></script>
 
 <script type="javascript">
-    $(function () {
+    $(".main-column").on("click",  ".item-link", function (e) {
+        e.preventDefault();
         window.parent.location.href = "https://gchristensen.github.io/#enso-portable";
     });
+
+
 </script>
