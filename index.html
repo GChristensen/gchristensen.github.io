@@ -240,6 +240,14 @@
             }
             else
                 showInfo($("#overview").get(0));
+
+            function onFrameMessage (m) {
+                var item = $(".softlist li[data-hash='" + m.hash + "']");
+                item.addClass("ui-selected");
+                showInfo(item.get(0));
+            }
+            window.addEventListener("message", onFrameMessage, false);
+
         });
     </script>
 </head>
