@@ -1,0 +1,183 @@
+<style>
+    @font-face {
+        font-family:'Noto Sans';
+        font-weight:400;
+        font-style:normal;
+        src:url("../fonts/Noto-Sans-regular/Noto-Sans-regular.eot");
+        src:url("../fonts/Noto-Sans-regular/Noto-Sans-regular.eot?#iefix") format("embedded-opentype"),
+        local("Noto Sans"),
+        local("Noto-Sans-regular"),
+        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.woff2") format("woff2"),
+        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.woff") format("woff"),
+        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.ttf") format("truetype"),
+        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.svg#NotoSans") format("svg")
+    }
+    * {
+        background-color: #fff;
+        font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    p {
+        color:#727272;
+        font-weight:400;
+    }
+    h3, h4, h5, h6 {
+        color: #494949;
+    }
+    a {
+        color:#267CB9;
+        text-decoration:none
+    }
+    a:hover,
+    a:focus {
+        color:#069;
+        font-weight:bold
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main-column {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+    }
+
+    .group-heading {
+        width: 100%;
+        border-bottom: 1px solid black;
+    }
+
+    .group-items {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 10px;
+    }
+
+    .group-item {
+        display: flex;
+        flex-direction: column;
+        width: min-content;
+    }
+
+    .group-item img {
+        width: 200px;
+    }
+
+    .group-item h4 {
+        margin-bottom: 5px;
+    }
+
+    .description {
+        font-size: 10pt;
+        text-align: justify;
+    }
+
+</style>
+
+<div class="main-container">
+    <div class="main-column">
+        <div class="group-heading"><h2>Command Interfaces</h2></div>
+        <div class="group-items">
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#enso-portable" class="item-link">
+                    <h4>Enso open-source</h4>
+                    <img src="https://gchristensen.github.io/enso-portable/screen.jpg">
+                    <p class="description">System-wide transparent overlay command line extensible in Python.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#ubiquitywe" class="item-link">
+                    <h4>Ubiquity WebExtension</h4>
+                    <img src="https://gchristensen.github.io/ubiquitywe/screen.png">
+                    <p class="description">Browser-based command line extensible in JavaScript.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#dark-flow" class="item-link">
+                    <h4>Dark Flow</h4>
+                    <img src="https://gchristensen.github.io/dark-flow/screen.png">
+                    <p class="description">URL-based command interface for paginated forums extensible in ClojureScript.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="group-heading"><h2>Browser Extensions</h2></div>
+        <div class="group-items">
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#scrapyard" class="item-link">
+                    <h4>Scrapyard</h4>
+                    <img src="https://gchristensen.github.io/scrapyard/media/screen.png">
+                    <p class="description">Advanced bookmark manager with page archiving functionality.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#torrent-add" class="item-link">
+                    <h4>Add Torrent</h4>
+                    <img src="https://gchristensen.github.io/torrent-add/screen.png">
+                    <p class="description">Add torrents to uTorrent from the browser context menu.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#ubiquitywe" class="item-link" style="visibility: hidden">
+                    <h4>Dark Flow</h4>
+                    <img src="https://gchristensen.github.io/dark-flow/screen.png">
+                    <p class="description">URL-based command interface for paginated forums extensible in ClojureScript.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="group-heading"><h2>Skins and Windows Sidebar Gadgets</h2></div>
+        <div class="group-items">
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#silentnight" class="item-link">
+                    <h4>Silent Night V6 Mod</h4>
+                    <img src="/images/overview/silent-night.jpg">
+                    <p class="description">Feature-rich skin for foobar2000 audio player with embedded file explorer tree.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#slideshow" class="item-link">
+                    <h4>Large Slideshow Gadget</h4>
+                    <img src="/images/overview/slideshow.jpg">
+                    <p class="description">Advanced slideshow gadget for Windows Sidebar.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#sunlight" class="item-link" >
+                    <h4>Sunlight World Map Gadgets</h4>
+                    <img src="https://raw.githubusercontent.com/GChristensen/sunligth-world-map-gadget/master/screen.png"
+                         style="height: 112px; object-fit: contain;">
+                    <p class="description">Shows the current Sun and Moon position.</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="group-heading"><h2>Hackies</h2></div>
+        <div class="group-items">
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#rho" class="item-link">
+                    <h4>&rho;Emacs</h4>
+                    <img src="https://rho-emacs.sourceforge.io/images/logo.png" style="height: 112px; object-fit: contain;">
+                    <p class="description">Preconfigured Emacs distribution for Windows with additional tools.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#lispx" class="item-link">
+                    <h4>Lisp Execution Proxy</h4>
+                    <img src="https://lispx-proxy.sourceforge.io/images/logo.png"  style="height: 112px; object-fit: contain;">
+                    <p class="description">Command-line tool to easily launch Lisp-based software.</p>
+                </a>
+            </div>
+            <div class="group-item">
+                <a href="https://gchristensen.github.io/#feedxcavator2" class="item-link" >
+                    <h4>Feedxcavator</h4>
+                    <img src="https://gchristensen.github.io/feedxcavator2/media/screen.png">
+                    <p class="description">Programmable Google App Engine-hosted RSS extractor.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
