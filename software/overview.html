@@ -217,7 +217,10 @@
             hashes[e.getAttribute("data-hash")] = e.getAttribute("data-url");
         });
 
+        console.log(hashes);
         $(".main-column").on("click",  ".item-link", function (e) {
+            console.log("uuu");
+            console.log(e);
             e.preventDefault();
             window.location.href = hashes[e.target.href.split("#")[1]];
         });
