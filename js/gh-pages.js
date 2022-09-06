@@ -28,7 +28,7 @@ function setDownloadLink(release, ext, elementId) {
 
 function playProductVideo(placeholderId, videoId, duration) {
     document.getElementById(placeholderId).style.display = "none";
-    document.getElementById('webm').style.display = "block";
+    document.getElementById(videoId).style.display = "block";
 
     var video = document.querySelector("#" + videoId + " video");
     video.play();
