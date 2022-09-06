@@ -13,7 +13,7 @@ function getLatestGHRelease(repo, callback) {
     xhr.send();
 }
 
-function setDownloadLink(release, elementId, ext) {
+function setDownloadLink(release, ext, elementId) {
     var asset;
 
     for (var i = 0; i < release.assets.length; ++i)
@@ -24,4 +24,27 @@ function setDownloadLink(release, elementId, ext) {
 
     var link = document.getElementById(elementId);
     link.href = asset.browser_download_url;
+}
+
+function playProductVideo(placeholderId, videoId, duration) {
+    document.getElementById(placeholderId).style.display = "none";
+    document.getElementById('webm').style.display = "block";
+
+    var video = document.querySelector("#" + videoId + " video");
+    video.play();
+
+    setTimeout(function () {
+        document.getElementById(videoId).style.display = "none";
+        document.getElementById(placeholderId).style.display = "block";
+    }, duration);
+}
+
+function delayedPlayProductVideo(placeholderId, videoId, duration, delay) {
+    setTimeout(function () {
+        if (navigator.userAgent.search("Chrome") >= 0
+            || navigator.userAgent.search("Firefox") >= 0
+            || navigator.userAgent.search("Safari") >= 0) {
+            playProductVideo(placeholderId, videoId, duration);
+        }
+    }, delay);
 }
