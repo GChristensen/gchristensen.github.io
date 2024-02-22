@@ -22,7 +22,7 @@
         }
 
         h3 {
-            font-size: 12pt;
+            font-size: 11pt;
             margin-bottom: 5px;
         }
 
@@ -191,11 +191,6 @@
         function showInfo(e) {
             var url = $(e).attr("data-url");
             if (url) {
-                if ($(e).parent().hasClass("hackies"))
-                    $("#logo").show();
-                else
-                    $("#logo").hide();
-
                 $("#itemframe").hide();
                 $("#loading").css("display", "flex");
                 $("#itemframe iframe").attr("src", url);
@@ -214,16 +209,7 @@
             // //    + 'target="_blank"><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>'
             // );
 
-            $( "#softgen" ).selectable({filter: ":not(.unselectable)",
-                selected: function( event, ui ) {
-                    $('.ui-selected').each(function () {
-                        if (this !== ui.selected)
-                            $(this).removeClass("ui-selected");
-                    });
-
-                    showInfo(ui.selected);
-                }});
-            $( "#wingadgets, #softdev, #blogs" ).selectable({
+            $( ".softlist" ).selectable({
                 selected: function( event, ui ) {
                     $('.ui-selected').each(function () {
                         if (this !== ui.selected)
@@ -256,47 +242,53 @@
 </head>
 <body>
 <div id="content">
-
     <div id="cntnr">
         <div id="left" style="position: relative;">
-            <!--h2 id="main-header">Software by GChristnsn</h2-->
-            <h2 id="main-header"><img src="images/fa_dense_wh.png">&nbsp;<a href="/" style="text-decoration: none; color: white;">Software by g/christensen</a></h2>
+            <h2 id="main-header"><img src="images/fa_dense_wh.png">&nbsp;<a href="/"
+                     style="text-decoration: none; color: white;">Software by g/christensen</a></h2>
 
             <div id="mnu">
-                <div style="position: relative"><h3>General Purpose</h3>
+                <div style="position: relative"><h3>Command Interfaces</h3>
                     <div id="donate" style="visibility: hidden; height: 18px; display: flex; position: absolute; right: 0; top: 0;
-                    line-height: 18px; align-items: center;">
+                            line-height: 18px; align-items: center;">
                         <a style="color: white; text-decoration: none; display: inline-block" href="https://www.patreon.com/gchristnsn" target="_blank">
-                            <img src="images/donate.png">&nbsp;<img src="images/patreon-logo.png"></a></div>
+                            <img src="images/donate.png">&nbsp;<img src="images/patreon-logo.png"></a>
+                    </div>
                 </div>
-                    <div id="overview" data-hash="overview" data-url="html/overview.html" style="display: none"></div>
-                    <ul id="softgen" class="softlist">
-                        <!--  class="ui-selected" -->
-                        <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso Launcher</li>
-                        <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
-                        <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
-                        <div class="unselectable" style="position: relative;">
-                            <h4 class="unselectable">Browser Add-Ons</h4>
-                            <ul id="addons" class="unselectable" class="softlist">
-                                <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
-                                <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">&#x2726; iShell Extension</li>
-                                <li data-hash="lightning-tab-groups" data-url="https://gchristensen.github.io/lightning-tab-groups/">&#x2726; Lightning Tab Groups</li>
-                                <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">&#x2726; Add Torrent To</li>
-                                <li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">&#x2726; Mix Slideshow</li>
-                                <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">&#x2726; MultiButton</li>
-                                <!--li data-hash="darkflow" data-url="https://gchristensen.github.io/dark-flow/">&#x2726; Dark Flow</li-->
-                            </ul>
-                        </div>
+                <div id="overview" data-hash="overview" data-url="html/overview.html" style="display: none"></div>
+                <ul id="softgen" class="softlist">
+                    <!--  class="ui-selected" -->
+                    <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso Launcher</li>
+                    <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">&#x2726; iShell Extension</li>
+                </ul>
 
-                        <div class="unselectable" style="position: relative;">
-                            <h4 class="unselectable">Windows Desktop Gadgets</h4>
-                            <ul id="wingadgets" class="unselectable" class="softlist">
-                                <li data-hash="slideshow" data-url="html/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
-                                <li data-hash="sunlight" data-url="html/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
-                            </ul>
-                        </div>
-                    </ul>
-                <h3>Hackies</h3>
+                <h3 class="unselectable">Browser Add-Ons</h3>
+                <ul id="addons" class="softlist">
+                    <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
+                    <li data-hash="lightning-tab-groups" data-url="https://gchristensen.github.io/lightning-tab-groups/">&#x2726; Lightning Tab Groups</li>
+                    <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">&#x2726; Add Torrent To</li>
+                    <li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">&#x2726; Mix Slideshow</li>
+                    <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">&#x2726; MultiButton</li>
+                    <!--li data-hash="darkflow" data-url="https://gchristensen.github.io/dark-flow/">&#x2726; Dark Flow</li-->
+                </ul>
+
+                <h3 class="unselectable">Applications</h3>
+                <ul class="softlist">
+                    <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
+                </ul>
+
+                <h3 class="unselectable">Skins</h3>
+                <ul class="softlist">
+                    <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
+                </ul>
+
+                <h3 class="unselectable">Windows Desktop Gadgets</h3>
+                <ul id="wingadgets" class="softlist">
+                    <li data-hash="slideshow" data-url="html/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
+                    <li data-hash="sunlight" data-url="html/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
+                </ul>
+
+                <h3>Hackable</h3>
                 <ul id="softdev" class="softlist hackies">
                     <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">&#x2726; Feedxcavator</li>
                     <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">&#x2726; Rho Emacs</li>
