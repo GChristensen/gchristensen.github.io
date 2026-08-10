@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Software by gchristnsn</title>
     <style>
+        html.os-linux body {
+            letter-spacing: 0.02em;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
         body {
             margin: 0;
             font-family: "Lucida Console", "Consolas", Menlo, Monaco, monospace;
@@ -534,6 +540,9 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
 <a href="https://gchristensen.github.io/html/overview.html" style="display: none"></a>
 
 <script>
+    if (/Linux/i.test(navigator.userAgent) && !/Android/i.test(navigator.userAgent)) {
+        document.documentElement.classList.add("os-linux");
+    }
     const menu = document.getElementById("mnu");
     const itemframe = document.getElementById("itemframe");
     const frame = itemframe.querySelector("iframe");
