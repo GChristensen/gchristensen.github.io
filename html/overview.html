@@ -1,36 +1,27 @@
 <style>
-    @font-face {
-        font-family:'Noto Sans';
-        font-weight:400;
-        font-style:normal;
-        src:url("../fonts/Noto-Sans-regular/Noto-Sans-regular.eot");
-        src:url("../fonts/Noto-Sans-regular/Noto-Sans-regular.eot?#iefix") format("embedded-opentype"),
-        local("Noto Sans"),
-        local("Noto-Sans-regular"),
-        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.woff2") format("woff2"),
-        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.woff") format("woff"),
-        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.ttf") format("truetype"),
-        url("../fonts/Noto-Sans-regular/Noto-Sans-regular.svg#NotoSans") format("svg")
-    }
-    * {
-        background-color: #fff;
-        font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    body {
+        margin: 0;
+        background-color: oklch(13% 0.025 295);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
     p {
-        color:#727272;
-        font-weight:400;
+        color: oklch(82% 0.02 295);
+        font-weight: 400;
     }
-    h3, h4, h5, h6 {
-        color: #494949;
+    h1, h2, h3, h4, h5, h6 {
+        color: oklch(92% 0.015 295);
+    }
+    h1, h2 {
+        color: oklch(75% 0.16 295);
     }
     a {
-        color:#267CB9;
-        text-decoration:none
+        color: oklch(72% 0.22 295);
+        text-decoration: none;
     }
     a:hover,
     a:focus {
-        color:#069;
-        font-weight:bold
+        color: oklch(80% 0.19 290);
+        font-weight: bold;
     }
 
     .main-container {
@@ -47,7 +38,7 @@
 
     .group-heading {
         width: 100%;
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid oklch(30% 0.04 295);
     }
 
     .main-heading  {
@@ -69,17 +60,51 @@
         width: min-content;
     }
 
-    .group-item img {
+    .item-link {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        transition: border-color .12s, transform .12s;
+    }
+
+    .item-link:hover {
+        border-color: oklch(55% 0.18 295);
+        transform: translateY(-2px);
+    }
+
+    .item-link:hover h4 {
+        color: oklch(80% 0.19 290);
+    }
+
+    .image-frame {
         width: 200px;
+        height: 112px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: oklch(13% 0.025 295);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .image-frame img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
     }
 
     .group-item h4 {
         margin-bottom: 5px;
+        transition: color .12s;
     }
 
     .description {
         font-size: 10pt;
-        text-align: justify;
+        text-align: left;
     }
 
 </style>
@@ -92,25 +117,22 @@
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#enso" class="item-link">
                     <h4>Enso Launcher</h4>
-                    <img src="https://gchristensen.github.io/enso-portable/media/screen.jpg">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/enso-portable/media/screen.jpg"></div>
                     <p class="description">System-wide transparent overlay command line extensible in Python.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#ishell" class="item-link">
                     <h4>iShell Extension</h4>
-                    <img src="https://gchristensen.github.io/ishell/media/screen.png">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/ishell/media/screen.png"></div>
                     <p class="description">Browser-based command line extensible in JavaScript.</p>
                 </a>
             </div>
-            <div class="group-item" style="width: 200px;">
+            <div class="group-item">
                 <a href="https://github.com/GChristensen/scarlett?tab=readme-ov-file#scarlett" class="item-link">
                     <h4>Scarlett</h4>
-                    <div style="text-align: center; width: 100%">
-                        <img src="https://raw.githubusercontent.com/GChristensen/scarlett/1e86c76823f99bf9fedca83212c60a3d64d092fe/icons/Logo.png"
-                             style="height: 112px; width: auto;">
-                        <p class="description" style="text-align: left">Hackable voice command interface</p>
-                    </div>
+                    <div class="image-frame"><img src="https://raw.githubusercontent.com/GChristensen/scarlett/1e86c76823f99bf9fedca83212c60a3d64d092fe/icons/Logo.png"></div>
+                    <p class="description">Hackable voice command interface</p>
                 </a>
             </div>
         </div>
@@ -120,35 +142,35 @@
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#scrapyard" class="item-link">
                     <h4>Scrapyard</h4>
-                    <img src="https://gchristensen.github.io/scrapyard/media/screen.png">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/scrapyard/media/screen.png"></div>
                     <p class="description">Advanced bookmark manager with page archiving functionality.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#lightning-tab-groups" class="item-link">
                     <h4>Lightning Tab Groups</h4>
-                    <img src="https://gchristensen.github.io/lightning-tab-groups/media/screen.png">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/lightning-tab-groups/media/screen.png"></div>
                     <p class="description">Firefox tab group manager for keyboard ninjas.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#torrent-add" class="item-link">
                     <h4>Add Torrent To</h4>
-                    <img src="https://gchristensen.github.io/torrent-add/screen.png">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/torrent-add/screen.png"></div>
                     <p class="description">Add torrents to uTorrent or qBittorrent from the browser context menu.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#mix-slideshow" class="item-link">
                     <h4>Mix Slideshow</h4>
-                    <img src="https://raw.githubusercontent.com/GChristensen/mix-slideshow/gh-pages/media/screen.png">
+                    <div class="image-frame"><img src="https://raw.githubusercontent.com/GChristensen/mix-slideshow/gh-pages/media/screen.png"></div>
                     <p class="description">Mix images from different sources in a single slideshow.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#multibutton" class="item-link">
                     <h4>MultiButton</h4>
-                    <img src="https://gchristensen.github.io/multibutton/media/logo.svg" height="112px">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/multibutton/media/logo.svg" style="height: 112px; width: auto; max-width: none;"></div>
                     <p class="description">Open several links at once with one click.</p>
                 </a>
             </div>
@@ -159,33 +181,32 @@
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#retreat" class="item-link">
                     <h4>Enso Retreat</h4>
-                    <img src="https://gchristensen.github.io/retreat/media/screen.jpg">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/retreat/media/screen.jpg"></div>
                     <p class="description">A break-reminder program with transparent interface.</p>
                 </a>
             </div>
         </div>
 
-        <div class="group-heading"><h2>Skins and Windows Sidebar Gadgets</h2></div>
+        <div class="group-heading"><h2>Skins & Windows Gadgets</h2></div>
         <div class="group-items">
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#silentnight" class="item-link">
                     <h4>Silent Night V6 Mod</h4>
-                    <img src="/images/overview/silent-night.jpg">
+                    <div class="image-frame"><img src="../images/overview/silent-night.jpg"></div>
                     <p class="description">Feature-rich skin for foobar2000 audio player with embedded file explorer tree.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#slideshow" class="item-link">
                     <h4>Large Slideshow Gadget</h4>
-                    <img src="/images/overview/slideshow.jpg">
+                    <div class="image-frame"><img src="../images/overview/slideshow.jpg"></div>
                     <p class="description">Advanced slideshow gadget for Windows Sidebar.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#sunlight" class="item-link" >
                     <h4>Sunlight World Map</h4>
-                    <img src="https://raw.githubusercontent.com/GChristensen/sunligth-world-map-gadget/master/screen.png"
-                         style="height: 112px; object-fit: contain;">
+                    <div class="image-frame"><img src="https://raw.githubusercontent.com/GChristensen/sunligth-world-map-gadget/master/screen.png"></div>
                     <p class="description">Shows the current Sun and Moon position.</p>
                 </a>
             </div>
@@ -196,14 +217,14 @@
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#feedxcavator" class="item-link" >
                     <h4>Feedxcavator</h4>
-                    <img src="https://gchristensen.github.io/feedxcavator/media/screen.png">
+                    <div class="image-frame"><img src="https://gchristensen.github.io/feedxcavator/media/screen.png"></div>
                     <p class="description">Programmable RSS extractor and server.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#rho" class="item-link">
                     <h4>&rho;Emacs</h4>
-                    <img src="https://rho-emacs.sourceforge.io/images/logo.png" style="height: 112px; object-fit: contain;">
+                    <div class="image-frame"><img src="https://rho-emacs.sourceforge.io/images/logo.png"></div>
                     <p class="description">Preconfigured Emacs distribution for Windows with additional tools.</p>
                 </a>
             </div>
@@ -214,16 +235,15 @@
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#kinetic" class="item-link">
                     <h4>The New Kinetic</h4>
-                    <img src="/images/overview/nk.png" style="height: 112px; object-fit: contain; object-position: center center">
-                    <p class="description" style="width: 200px">g/christensen's personal blog.</p>
+                    <div class="image-frame"><img src="../images/overview/nk.png"></div>
+                    <p class="description">g/christensen's personal blog.</p>
                 </a>
             </div>
             <div class="group-item">
                 <a href="https://gchristensen.github.io/#posts" class="item-link">
                     <h4>T/POSTS</h4>
-                    <img src="/images/overview/technology.png"
-                         style="width: 200px; height: 112px; object-fit: contain; object-position: center center">
-                    <p class="description" style="width: 200px">g/christensen's technical blog.</p>
+                    <div class="image-frame"><img src="../images/overview/technology.png"></div>
+                    <p class="description">g/christensen's technical blog.</p>
                 </a>
             </div>
         </div>

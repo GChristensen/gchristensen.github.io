@@ -6,8 +6,9 @@
     <style>
         body {
             margin: 0;
-            font-family: Helvetica, Arial, sans-serif;
+            font-family: "Lucida Console", "Consolas", Menlo, Monaco, monospace;
             overflow: hidden;
+            background-color: oklch(13% 0.025 295);
         }
 
         h2, h3, h4, h5 {
@@ -33,7 +34,10 @@
         }
 
         a, a:visited {
-            color: #4198ff;
+            color: oklch(72% 0.22 295);
+        }
+        a:hover, a:focus {
+            color: oklch(80% 0.19 290);
         }
 
         ul {
@@ -44,6 +48,20 @@
 
         li {
             cursor: pointer;
+            border-left: 2px solid transparent;
+            padding: 3px 6px;
+            border-radius: 0 3px 3px 0;
+            transition: background-color .12s, border-color .12s, color .12s;
+        }
+
+        li:hover {
+            background-color: oklch(22% 0.035 295);
+            border-left-color: oklch(50% 0.15 295);
+        }
+
+        li:focus-visible {
+            outline: 2px solid oklch(72% 0.22 295);
+            outline-offset: 1px;
         }
 
         #content {
@@ -51,6 +69,23 @@
             flex-direction: column;
             position: absolute;
             inset: 0;
+            box-sizing: border-box;
+            border: 1px solid oklch(35% 0.1 295);
+        }
+
+        #content::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                oklch(0% 0 0 / 0.09) 0px,
+                oklch(0% 0 0 / 0.09) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 100;
         }
 
         #cntnr {
@@ -62,7 +97,9 @@
             flex: 0 0 auto;
             display: flex;
             flex-direction: column;
-            background-color: #191919;
+            background-color: oklch(15% 0.028 295);
+            border-right: 1px solid oklch(28% 0.04 295);
+            position: relative;
         }
 
         #main-header {
@@ -70,27 +107,69 @@
             font-size: 14pt;
             padding: 10px 20px 10px 10px;
             margin: 0;
-            color: white;
-            background-color: black;
+            color: oklch(94% 0.015 295);
+            background-color: oklch(17% 0.055 295);
+            border-bottom: 1px solid oklch(28% 0.04 295);
             flex: none;
             display: flex;
             align-items: center;
         }
 
         #main-header a {
-            color: white;
+            color: oklch(94% 0.015 295);
             text-decoration: none;
         }
 
         .blog-heading {
             width: 100%;
             padding-top: 10px;
-            border-top: 1px solid white;
+            border-top: 1px solid oklch(28% 0.04 295);
+        }
+
+        #mnu-region {
+            position: relative;
+            flex: 1 1 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #code-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #code-bg pre {
+            margin: 0;
+            flex: 0 0 auto;
+            font-family: "Lucida Console", "Consolas", Menlo, Monaco, monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: oklch(72% 0.22 295);
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow: hidden;
+        }
+
+        #code-cols {
+            position: absolute;
+            top: -60%;
+            left: -100%;
+            width: 300%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            opacity: 0.09;
+            transform: rotate(20deg);
+            transform-origin: center;
         }
 
         #mnu {
-            color: white;
-            background-color: #191919;
+            color: oklch(90% 0.01 295);
+            background-color: transparent;
             padding: 0 10px;
             font-size: 14px;
             min-height: 0;
@@ -99,7 +178,19 @@
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: thin;
-            scrollbar-color: #555 #191919;
+            scrollbar-color: oklch(35% 0.05 295) transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        #mnu h3 {
+            color: oklch(75% 0.16 295);
+            letter-spacing: 0.06em;
+            margin-top: 24px;
+        }
+
+        #mnu h3:first-child {
+            margin-top: 12px;
         }
 
         #mnu::-webkit-scrollbar {
@@ -107,11 +198,11 @@
         }
 
         #mnu::-webkit-scrollbar-track {
-            background: #191919;
+            background: transparent;
         }
 
         #mnu::-webkit-scrollbar-thumb {
-            background-color: #555;
+            background-color: oklch(35% 0.05 295);
             border-radius: 4px;
         }
 
@@ -120,6 +211,7 @@
             flex-direction: column;
             flex: 1 1 auto;
             position: relative;
+            background-color: oklch(13% 0.025 295);
         }
 
         #loading {
@@ -157,9 +249,45 @@
             justify-content: center;
         }
 
-        .ui-selected {
-            background: black;
-            color: white;
+        #hostname {
+            position: absolute;
+            left: 10px;
+            bottom: 8px;
+            font-size: 11px;
+            color: oklch(45% 0.03 295);
+            font-family: "Lucida Console", "Consolas", Menlo, Monaco, monospace;
+            pointer-events: none;
+        }
+
+        .ui-selected, .ui-selected:hover {
+            background: oklch(30% 0.13 295);
+            color: oklch(97% 0.01 295);
+            border-left-color: oklch(72% 0.22 295);
+        }
+
+        .ui-selected::before {
+            content: ">";
+            margin-right: 4px;
+        }
+
+        #fallback {
+            display: none;
+            color: oklch(80% 0.02 295);
+            text-align: center;
+            padding: 20px;
+        }
+
+        #fallback a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            border: 1px solid oklch(45% 0.15 295);
+            border-radius: 3px;
+            color: oklch(85% 0.15 295);
+        }
+
+        #fallback a:hover {
+            background-color: oklch(22% 0.05 295);
         }
     </style>
 </head>
@@ -169,51 +297,217 @@
         <div id="left">
             <h2 id="main-header"><img src="images/fa_dense_wh.png" alt="">&nbsp;<a href="/">Software by g/christensen</a></h2>
 
-            <div id="mnu">
+            <div id="hostname">root@gchristensen:~#</div>
+
+            <div id="mnu-region">
+                <div id="code-bg"><div id="code-cols"><pre>function loadModule(path) {
+  const cache = new Map();
+  if (cache.has(path)) return cache.get(path);
+  const mod = require(path);
+  cache.set(path, mod);
+  return mod;
+}
+
+class CommandRegistry extends EventEmitter {
+  constructor() {
+    super();
+    this.commands = new Map();
+  }
+  register(name, handler) {
+    this.commands.set(name, handler);
+    this.emit('registered', name);
+  }
+  async exec(name, ...args) {
+    const fn = this.commands.get(name);
+    if (!fn) throw new Error(`unknown: ${name}`);
+    return await fn(...args);
+  }
+}
+</pre><pre>const shell = new CommandRegistry();
+shell.register('open', async (url) => {
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+});
+
+for (let i = 0; i < items.length; i++) {
+  const item = items[i];
+  if (item.disabled) continue;
+  render(item, { index: i, theme: 'dark' });
+}
+
+export default shell;
+</pre><pre>class Overlay {
+  constructor(root) {
+    this.root = root;
+    this.visible = false;
+  }
+  toggle() {
+    this.visible = !this.visible;
+    this.root.classList.toggle('open', this.visible);
+  }
+  bindHotkey(key, fn) {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === key) fn(e);
+    });
+  }
+}
+
+const overlay = new Overlay(document.body);
+overlay.bindHotkey('Escape', () => overlay.toggle());
+</pre><pre>function loadModule(path) {
+  const cache = new Map();
+  if (cache.has(path)) return cache.get(path);
+  const mod = require(path);
+  cache.set(path, mod);
+  return mod;
+}
+
+class CommandRegistry extends EventEmitter {
+  constructor() {
+    super();
+    this.commands = new Map();
+  }
+  register(name, handler) {
+    this.commands.set(name, handler);
+    this.emit('registered', name);
+  }
+  async exec(name, ...args) {
+    const fn = this.commands.get(name);
+    if (!fn) throw new Error(`unknown: ${name}`);
+    return await fn(...args);
+  }
+}
+</pre><pre>const shell = new CommandRegistry();
+shell.register('open', async (url) => {
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+});
+
+for (let i = 0; i < items.length; i++) {
+  const item = items[i];
+  if (item.disabled) continue;
+  render(item, { index: i, theme: 'dark' });
+}
+
+export default shell;
+</pre><pre>class Overlay {
+  constructor(root) {
+    this.root = root;
+    this.visible = false;
+  }
+  toggle() {
+    this.visible = !this.visible;
+    this.root.classList.toggle('open', this.visible);
+  }
+  bindHotkey(key, fn) {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === key) fn(e);
+    });
+  }
+}
+
+const overlay = new Overlay(document.body);
+overlay.bindHotkey('Escape', () => overlay.toggle());
+</pre><pre>function loadModule(path) {
+  const cache = new Map();
+  if (cache.has(path)) return cache.get(path);
+  const mod = require(path);
+  cache.set(path, mod);
+  return mod;
+}
+
+class CommandRegistry extends EventEmitter {
+  constructor() {
+    super();
+    this.commands = new Map();
+  }
+  register(name, handler) {
+    this.commands.set(name, handler);
+    this.emit('registered', name);
+  }
+  async exec(name, ...args) {
+    const fn = this.commands.get(name);
+    if (!fn) throw new Error(`unknown: ${name}`);
+    return await fn(...args);
+  }
+}
+</pre><pre>const shell = new CommandRegistry();
+shell.register('open', async (url) => {
+  const res = await fetch(url, { mode: 'cors' });
+  if (!res.ok) throw new Error(res.status);
+  return res.json();
+});
+
+for (let i = 0; i < items.length; i++) {
+  const item = items[i];
+  if (item.disabled) continue;
+  render(item, { index: i, theme: 'dark' });
+}
+
+export default shell;
+</pre><pre>class Overlay {
+  constructor(root) {
+    this.root = root;
+    this.visible = false;
+  }
+  toggle() {
+    this.visible = !this.visible;
+    this.root.classList.toggle('open', this.visible);
+  }
+  bindHotkey(key, fn) {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === key) fn(e);
+    });
+  }
+}
+
+const overlay = new Overlay(document.body);
+overlay.bindHotkey('Escape', () => overlay.toggle());
+</pre></div></div>
+                <div id="mnu">
                 <h3>Command Interfaces</h3>
                 <div id="overview" data-hash="overview" data-url="html/overview.html" style="display: none"></div>
                 <ul class="softlist">
-                    <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso Launcher</li>
-                    <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">&#x2726; iShell Extension</li>
-                    <li data-hash="scarlett" data-url="https://github.com/GChristensen/scarlett?tab=readme-ov-file#scarlett">&#x2726; Scarlett</li>
+                    <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">$ Enso Launcher</li>
+                    <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">$ iShell Extension</li>
+                    <li data-hash="scarlett" data-url="https://github.com/GChristensen/scarlett?tab=readme-ov-file#scarlett">$ Scarlett</li>
                 </ul>
 
                 <h3>Browser Extensions</h3>
                 <ul class="softlist">
-                    <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
-                    <li data-hash="lightning-tab-groups" data-url="https://gchristensen.github.io/lightning-tab-groups/">&#x2726; Lightning Tab Groups</li>
-                    <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">&#x2726; Add Torrent To</li>
-                    <li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">&#x2726; Mix Slideshow</li>
-                    <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">&#x2726; MultiButton</li>
+                    <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">$ Scrapyard</li>
+                    <li data-hash="lightning-tab-groups" data-url="https://gchristensen.github.io/lightning-tab-groups/">$ Lightning Tab Groups</li>
+                    <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">$ Add Torrent To</li>
+                    <li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">$ Mix Slideshow</li>
+                    <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">$ MultiButton</li>
                 </ul>
 
                 <h3>Applications</h3>
                 <ul class="softlist">
-                    <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
+                    <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">$ Enso Retreat</li>
                 </ul>
 
-                <h3>Skins</h3>
+                <h3>Skins &amp; Windows Gadgets</h3>
                 <ul class="softlist">
-                    <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
-                </ul>
-
-                <h3>Windows Desktop Gadgets</h3>
-                <ul class="softlist">
-                    <li data-hash="slideshow" data-url="html/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
-                    <li data-hash="sunlight" data-url="html/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
+                    <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">$ Silent Night Mod</li>
+                    <li data-hash="slideshow" data-url="html/slideshow.html">$ Advanced SlideShow Gadget</li>
+                    <li data-hash="sunlight" data-url="html/sunlight.html">$ Sunlight World Map Gadget</li>
                 </ul>
 
                 <h3>Hackable</h3>
                 <ul class="softlist">
-                    <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">&#x2726; Feedxcavator</li>
-                    <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">&#x2726; Rho Emacs</li>
+                    <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">$ Feedxcavator</li>
+                    <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">$ Rho Emacs</li>
                 </ul>
 
                 <h3 class="blog-heading">Blogs</h3>
                 <ul class="softlist">
-                    <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">&#x2726; Technical Posts</li>
-                    <li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">&#x2726; The New Kinetic</li>
+                    <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">$ Technical Posts</li>
+                    <li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">$ The New Kinetic</li>
                 </ul>
+                </div>
             </div>
         </div>
 
@@ -223,7 +517,13 @@
             </div>
             <div id="loading" class="centering-container">
                 <div class="centering-flex-container">
-                    <img src="/images/loading.gif" width="103" height="103" alt="Loading">
+                    <span style="font-family:'Lucida Console','Consolas',Menlo,Monaco,monospace;color:oklch(72% 0.22 295);font-size:35px;"><span id="spinner-char">|</span> loading...</span>
+                </div>
+            </div>
+            <div id="fallback" class="centering-container">
+                <div class="centering-flex-container">
+                    <p>This page can't be shown here.</p>
+                    <a id="fallback-link" href="#" target="_blank">Open in a new tab &#x2197;</a>
                 </div>
             </div>
         </div>
@@ -238,6 +538,26 @@
     const itemframe = document.getElementById("itemframe");
     const frame = itemframe.querySelector("iframe");
     const loading = document.getElementById("loading");
+    const fallback = document.getElementById("fallback");
+    const fallbackLink = document.getElementById("fallback-link");
+    const spinnerChar = document.getElementById("spinner-char");
+    const spinnerFrames = ["|", "/", "-", "\\"];
+    let spinnerIndex = 0;
+    let spinnerTimer = null;
+    let loadTimer = null;
+
+    function startSpinner() {
+        stopSpinner();
+        spinnerTimer = setInterval(() => {
+            spinnerIndex = (spinnerIndex + 1) % spinnerFrames.length;
+            spinnerChar.textContent = spinnerFrames[spinnerIndex];
+        }, 120);
+    }
+
+    function stopSpinner() {
+        clearInterval(spinnerTimer);
+        spinnerTimer = null;
+    }
 
     function findItem(hash) {
         return document.querySelector(`.softlist li[data-hash="${hash}"]`);
@@ -254,19 +574,42 @@
     function showInfo(item) {
         const url = item.getAttribute("data-url");
         if (!url) return;
+        clearTimeout(loadTimer);
+        fallback.style.display = "none";
         itemframe.style.display = "none";
         loading.style.display = "flex";
+        startSpinner();
+        fallbackLink.href = url;
         frame.src = url;
+        loadTimer = setTimeout(() => {
+            loading.style.display = "none";
+            stopSpinner();
+            fallback.style.display = "flex";
+        }, 5000);
     }
 
     frame.addEventListener("load", () => {
+        clearTimeout(loadTimer);
+        stopSpinner();
         loading.style.display = "none";
+        fallback.style.display = "none";
         itemframe.style.display = "flex";
     });
 
     menu.addEventListener("click", (e) => {
         const item = e.target.closest(".softlist li");
         if (item) selectItem(item);
+    });
+
+    menu.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        const item = e.target.closest(".softlist li");
+        if (item) { e.preventDefault(); selectItem(item); }
+    });
+
+    document.querySelectorAll(".softlist li").forEach(li => {
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("role", "button");
     });
 
     window.addEventListener("message", (e) => {
