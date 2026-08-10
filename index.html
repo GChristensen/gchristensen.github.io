@@ -5,6 +5,7 @@
     <title>Software by gchristnsn</title>
     <style>
         body {
+            margin: 0;
             font-family: Helvetica, Arial, sans-serif;
             overflow: hidden;
         }
@@ -35,24 +36,21 @@
             color: #4198ff;
         }
 
-        a.video {
-            text-decoration: none;
-        }
-
         ul {
             list-style: none;
             padding-left: 20px;
             margin-top: 5px;
         }
 
+        li {
+            cursor: pointer;
+        }
+
         #content {
             display: flex;
             flex-direction: column;
             position: absolute;
-            right: 0;
-            bottom: 0;
-            top: 0;
-            left: 0;
+            inset: 0;
         }
 
         #cntnr {
@@ -70,15 +68,18 @@
         #main-header {
             text-transform: none;
             font-size: 14pt;
-            padding: 10px;
-            padding-right: 20px;
-            margin-top: 0;
-            margin-bottom: 0;
+            padding: 10px 20px 10px 10px;
+            margin: 0;
             color: white;
             background-color: black;
             flex: none;
             display: flex;
             align-items: center;
+        }
+
+        #main-header a {
+            color: white;
+            text-decoration: none;
         }
 
         .blog-heading {
@@ -90,15 +91,28 @@
         #mnu {
             color: white;
             background-color: #191919;
-            padding-left: 10px;
-            /*flex: 1 1 100%;*/
-            padding-right: 10px;
+            padding: 0 10px;
             font-size: 14px;
             min-height: 0;
-            flex-grow: 1;
+            flex: 1 1 100%;
             height: 0;
             overflow-y: auto;
             overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #555 #191919;
+        }
+
+        #mnu::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #mnu::-webkit-scrollbar-track {
+            background: #191919;
+        }
+
+        #mnu::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 4px;
         }
 
         #right {
@@ -115,203 +129,101 @@
 
         #itemframe {
             flex: 1 1 auto;
-            padding: 10px;
-        }
-
-        #itemframe {
+            /*padding: 10px;*/
             display: flex;
             flex-direction: column;
         }
 
         #itemframe iframe {
             flex: 1 1 auto;
-        }
-
-        .software {
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: small;
-            color: black;
-        }
-        .software a:link
-        {
-            color: black;
-        }
-        .software a:visited
-        {
-            color: black
-        }
-        .software a:hover
-        {
-            color: dagr;
-        }
-        .software a:active
-        {
-            color: dagr;
-        }
-
-        li {
-            cursor: pointer;
+            border: none;
         }
 
         .centering-container {
             display: flex;
             flex-direction: column;
             position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            inset: 0;
             align-items: center;
             justify-content: center;
         }
 
         .centering-flex-container {
-            /*margin: 10px;*/
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            /* for Firefox */
             min-height: 0;
             align-items: center;
             justify-content: center;
         }
 
-        .ui-selecting { background: #101010; color: white; }
-        .ui-selected { background: black; color: white; }
-    </style>
-
-    <link rel="stylesheet" href="js/jquery-ui/jquery-ui.min.css">
-    <link rel="stylesheet" href="js/simplebar/simplebar.min.css">
-
-    <script type="application/javascript" src="js/jquery-ui/external/jquery/jquery.js"></script>
-    <script type="application/javascript" src="js/jquery-ui/jquery-ui.min.js"></script>
-    <script type="application/javascript" src="js/simplebar/simplebar.min.js"></script>
-    <script type="application/javascript">
-
-        function showInfo(e) {
-            var url = $(e).attr("data-url");
-            if (url) {
-                $("#itemframe").hide();
-                $("#loading").css("display", "flex");
-                $("#itemframe iframe").attr("src", url);
-                $("#itemframe iframe").load(function() {
-                    $("#loading").hide();
-                    $("#itemframe").show();
-                });
-            }
+        .ui-selected {
+            background: black;
+            color: white;
         }
-
-        $(function() {
-            new SimpleBar($('#mnu')[0]);
-
-            // $("#mnu").prepend('<img id="logo" src="images/ghost.png" style="display: none; position: absolute; right: 15px; bottom: 0;">'
-            // //    + '<a href="http://thenewkinetic.blogspot.com" style="color: white; position: absolute; right: 45px; bottom: 5px; z-index: 10001;"'
-            // //    + 'target="_blank"><img src="images/external-link.svg" style="padding-right: 5px; width: 12px; height: 12px;">the new kinetic</a>'
-            // );
-
-            $( ".softlist" ).selectable({
-                selected: function( event, ui ) {
-                    $('.ui-selected').each(function () {
-                        if (this !== ui.selected)
-                            $(this).removeClass("ui-selected");
-                    });
-                    showInfo(ui.selected);
-                }});
-
-            if (location.hash) {
-                $(".ui-selected").removeClass("ui-selected");
-                var item = $(".softlist li[data-hash='" + location.hash.substring(1) + "']");
-                item.addClass("ui-selected");
-                showInfo(item.get(0));
-            }
-            else
-                showInfo($("#overview").get(0));
-
-            function onFrameMessage (m) {
-                if (m.data.type === "select") {
-                    var item = $(".softlist li[data-hash='" + m.data.hash + "']");
-                    item.addClass("ui-selected");
-                    showInfo(item.get(0));
-                }
-            }
-
-            window.addEventListener("message", onFrameMessage, false);
-
-        });
-    </script>
+    </style>
 </head>
 <body>
 <div id="content">
     <div id="cntnr">
-        <div id="left" style="position: relative;">
-            <h2 id="main-header"><img src="images/fa_dense_wh.png">&nbsp;<a href="/"
-                     style="text-decoration: none; color: white;">Software by g/christensen</a></h2>
+        <div id="left">
+            <h2 id="main-header"><img src="images/fa_dense_wh.png" alt="">&nbsp;<a href="/">Software by g/christensen</a></h2>
 
             <div id="mnu">
-                <div style="position: relative"><h3>Command Interfaces</h3>
-                    <div id="donate" style="visibility: hidden; height: 18px; display: flex; position: absolute; right: 0; top: 0;
-                            line-height: 18px; align-items: center;">
-                        <a style="color: white; text-decoration: none; display: inline-block" href="https://www.patreon.com/gchristnsn" target="_blank">
-                            <img src="images/donate.png">&nbsp;<img src="images/patreon-logo.png"></a>
-                    </div>
-                </div>
+                <h3>Command Interfaces</h3>
                 <div id="overview" data-hash="overview" data-url="html/overview.html" style="display: none"></div>
-                <ul id="softgen" class="softlist">
-                    <!--  class="ui-selected" -->
+                <ul class="softlist">
                     <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">&#x2726; Enso Launcher</li>
                     <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">&#x2726; iShell Extension</li>
                     <li data-hash="scarlett" data-url="https://github.com/GChristensen/scarlett?tab=readme-ov-file#scarlett">&#x2726; Scarlett</li>
                 </ul>
 
-                <h3 class="unselectable">Browser Extensions</h3>
-                <ul id="addons" class="softlist">
+                <h3>Browser Extensions</h3>
+                <ul class="softlist">
                     <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">&#x2726; Scrapyard</li>
                     <li data-hash="lightning-tab-groups" data-url="https://gchristensen.github.io/lightning-tab-groups/">&#x2726; Lightning Tab Groups</li>
                     <li data-hash="torrent-add" data-url="https://gchristensen.github.io/torrent-add/">&#x2726; Add Torrent To</li>
                     <li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">&#x2726; Mix Slideshow</li>
                     <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">&#x2726; MultiButton</li>
-                    <!--li data-hash="darkflow" data-url="https://gchristensen.github.io/dark-flow/">&#x2726; Dark Flow</li-->
                 </ul>
 
-                <h3 class="unselectable">Applications</h3>
+                <h3>Applications</h3>
                 <ul class="softlist">
                     <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">&#x2726; Enso Retreat</li>
                 </ul>
 
-                <h3 class="unselectable">Skins</h3>
+                <h3>Skins</h3>
                 <ul class="softlist">
                     <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">&#x2726; Silent Night Mod</li>
                 </ul>
 
-                <h3 class="unselectable">Windows Desktop Gadgets</h3>
-                <ul id="wingadgets" class="softlist">
+                <h3>Windows Desktop Gadgets</h3>
+                <ul class="softlist">
                     <li data-hash="slideshow" data-url="html/slideshow.html">&#x2726; Advanced SlideShow Gadget</li>
                     <li data-hash="sunlight" data-url="html/sunlight.html">&#x2726; Sunlight World Map Gadget</li>
                 </ul>
 
                 <h3>Hackable</h3>
-                <ul id="softdev" class="softlist hackies">
+                <ul class="softlist">
                     <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">&#x2726; Feedxcavator</li>
                     <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">&#x2726; Rho Emacs</li>
-                    <!--li data-hash="lispx" data-url="https://lispx-proxy.sourceforge.io/">&#x2726; Lisp Execution Proxy</li-->
                 </ul>
 
                 <h3 class="blog-heading">Blogs</h3>
-                <ul id="blogs" class="softlist">
+                <ul class="softlist">
                     <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">&#x2726; Technical Posts</li>
                     <li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">&#x2726; The New Kinetic</li>
                 </ul>
             </div>
-
         </div>
 
         <div id="right">
             <div id="itemframe">
-                <iframe width="100%" height="100%" src="#" frameborder="0" allowfullscreen></iframe>
+                <iframe src="about:blank" allowfullscreen></iframe>
             </div>
             <div id="loading" class="centering-container">
                 <div class="centering-flex-container">
-                    <img src="/images/loading.gif" style="width: 103px; height: 103px">
+                    <img src="/images/loading.gif" width="103" height="103" alt="Loading">
                 </div>
             </div>
         </div>
@@ -320,5 +232,50 @@
 
 <!-- for robots -->
 <a href="https://gchristensen.github.io/html/overview.html" style="display: none"></a>
+
+<script>
+    const menu = document.getElementById("mnu");
+    const itemframe = document.getElementById("itemframe");
+    const frame = itemframe.querySelector("iframe");
+    const loading = document.getElementById("loading");
+
+    function findItem(hash) {
+        return document.querySelector(`.softlist li[data-hash="${hash}"]`);
+    }
+
+    function selectItem(item) {
+        if (!item) return;
+        const selected = menu.querySelector(".ui-selected");
+        if (selected) selected.classList.remove("ui-selected");
+        item.classList.add("ui-selected");
+        showInfo(item);
+    }
+
+    function showInfo(item) {
+        const url = item.getAttribute("data-url");
+        if (!url) return;
+        itemframe.style.display = "none";
+        loading.style.display = "flex";
+        frame.src = url;
+    }
+
+    frame.addEventListener("load", () => {
+        loading.style.display = "none";
+        itemframe.style.display = "flex";
+    });
+
+    menu.addEventListener("click", (e) => {
+        const item = e.target.closest(".softlist li");
+        if (item) selectItem(item);
+    });
+
+    window.addEventListener("message", (e) => {
+        if (e.data && e.data.type === "select") {
+            selectItem(findItem(e.data.hash));
+        }
+    });
+
+    selectItem(location.hash ? findItem(location.hash.substring(1)) : document.getElementById("overview"));
+</script>
 </body>
 </html>
