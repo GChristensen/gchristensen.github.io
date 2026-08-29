@@ -622,9 +622,22 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
         li.setAttribute("role", "button");
     });
 
+    function sameDomain(url) {
+        try {
+            return new URL(url, location.href).hostname === location.hostname;
+        } catch (ex) {
+            return false;
+        }
+    }
+
     window.addEventListener("message", (e) => {
-        if (e.data && e.data.type === "select") {
+        if (!e.data) return;
+        if (e.data.type === "select") {
             selectItem(findItem(e.data.hash));
+        }
+        else if (e.data.type === "gc-forward-link" && e.data.data
+                 && sameDomain(e.origin) && sameDomain(e.data.data)) {
+            window.location = e.data.data;
         }
     });
 
