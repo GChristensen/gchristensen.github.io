@@ -12,25 +12,72 @@
         url("../fonts/Noto-Sans-regular/Noto-Sans-regular.ttf") format("truetype"),
         url("../fonts/Noto-Sans-regular/Noto-Sans-regular.svg#NotoSans") format("svg")
     }
+    :root {
+        color-scheme: dark;
+
+        --g-10: oklch(16% 0.005 265);
+        --on-surface: oklch(80% 0.005 265);
+        --on-surface-strong: oklch(96% 0.003 265);
+        --accent: oklch(83% 0.035 245);
+        --accent-bright: oklch(92% 0.03 245);
+        --glass-border: oklch(100% 0 0 / 0.09);
+        --radius-m: 12px;
+    }
+
+    /* opaque graphite standalone, transparent when framed by the shell */
+    html {
+        background-color: var(--g-10);
+    }
+
+    body {
+        margin: 0;
+        background-color: transparent;
+        scrollbar-width: thin;
+        scrollbar-color: oklch(100% 0 0 / 0.16) transparent;
+    }
+
     article {
-        background-color: #fff;
-        font: 14px/1.5 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background-color: transparent;
+        padding: 14px 22px 28px;
+        font: 14px/1.6 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     }
     article p {
-        color:#727272;
-        font-weight:400;
+        color: var(--on-surface);
+        font-weight: 400;
     }
     h3, h4, h5, h6 {
-        color: #494949;
+        color: var(--on-surface-strong);
+    }
+    h3 {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 12pt;
     }
     a {
-        color:#267CB9;
-        text-decoration:none
+        color: var(--accent);
+        text-decoration: none;
     }
     a:hover,
     a:focus {
-        color:#069;
-        font-weight:bold
+        color: var(--accent-bright);
+    }
+
+    /* monochrome icons are authored dark — flip them for the graphite surface */
+    .link-icon {
+        vertical-align: text-bottom;
+        filter: invert(1);
+        opacity: 0.85;
+    }
+
+    .screenshot {
+        max-width: 100%;
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-m);
+        box-shadow: 0 2px 6px oklch(0% 0 0 / 0.4), 0 14px 38px oklch(0% 0 0 / 0.35);
+    }
+
+    .note {
+        color: var(--on-surface);
     }
 </style>
 
@@ -38,17 +85,22 @@
     <h3>Sunlight World Map Gadget</h3>
     <div style="margin-left: 10px">
     <p>Shows the current Sun and Moon position.</p>
-    <p><img src="/images/github.png"/>
+    <p><img src="/images/github.png" class="link-icon" alt=""/>
         <a href="https://github.com/GChristensen/sunligth-world-map-gadget/tree/master/html5-canvas-demo" target="_blank">Calculations demo</a>&nbsp;&nbsp;
-        <img src="/images/github.png"/>
+        <img src="/images/github.png" class="link-icon" alt=""/>
         <a href="https://github.com/GChristensen/sunligth-world-map-gadget" target="_blank">Source code</a>&nbsp;&nbsp;
-        <img src="/images/windows.png"/>
+        <img src="/images/windows.png" alt=""/>
         <a href="https://github.com/GChristensen/sunligth-world-map-gadget/releases/latest/download/WorldSunlightMap.gadget" target="_blank">Download</a>
     </p>
     <p><img
             src="https://github.com/GChristensen/sunligth-world-map-gadget/raw/master/screen.png"
-            style="max-width:100%;"></p>
-        <p style="color: black;"><a href="http://8gadgetpack.net" rel="nofollow" target="_blank">Windows Sidebar</a> should be
+            class="screenshot"></p>
+        <p class="note"><a href="http://8gadgetpack.net" rel="nofollow" target="_blank">Windows Sidebar</a> should be
             installed manually on the modern versions of Windows.</p>
     </div>
 </article>
+
+<script>
+    if (window.parent !== window)
+        document.documentElement.style.backgroundColor = "transparent";
+</script>

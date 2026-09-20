@@ -1,57 +1,121 @@
 <style>
+    :root {
+        color-scheme: dark;
+
+        --g-10: oklch(16% 0.005 265);
+        --on-surface: oklch(85% 0.005 265);
+        --on-surface-muted: oklch(64% 0.008 265);
+        --on-surface-strong: oklch(96% 0.003 265);
+
+        --accent: oklch(83% 0.035 245);
+        --accent-bright: oklch(92% 0.03 245);
+
+        --glass-tint: oklch(34% 0.008 265 / 0.3);
+        --glass-sheen: linear-gradient(155deg,
+            oklch(100% 0 0 / 0.08) 0%,
+            oklch(100% 0 0 / 0.015) 45%,
+            oklch(100% 0 0 / 0.045) 100%);
+        --glass-border: oklch(100% 0 0 / 0.09);
+        --glass-border-strong: oklch(100% 0 0 / 0.18);
+        --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.12);
+
+        --elev-1: 0 1px 2px oklch(0% 0 0 / 0.3), 0 6px 18px oklch(0% 0 0 / 0.28);
+        --elev-2: 0 3px 8px oklch(0% 0 0 / 0.38), 0 16px 40px oklch(0% 0 0 / 0.36);
+
+        --radius-s: 8px;
+        --radius-m: 12px;
+
+        --ease: cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* opaque graphite when opened directly; transparent when framed, so the
+       host panel's glass shows through (see the script at the end) */
+    html {
+        background-color: var(--g-10);
+    }
+
     body {
         margin: 0;
-        background-color: oklch(13% 0.025 295);
+        background-color: transparent;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        scrollbar-width: thin;
+        scrollbar-color: oklch(100% 0 0 / 0.16) transparent;
     }
+
+    body::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    body::-webkit-scrollbar-thumb {
+        background-color: oklch(100% 0 0 / 0.16);
+        border-radius: 5px;
+    }
+
+    body::-webkit-scrollbar-thumb:hover {
+        background-color: oklch(100% 0 0 / 0.26);
+    }
+
     p {
-        color: oklch(82% 0.02 295);
+        color: var(--on-surface);
         font-weight: 400;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: oklch(92% 0.015 295);
+        color: var(--on-surface-strong);
     }
     h1, h2 {
-        color: oklch(75% 0.16 295);
+        color: var(--on-surface-muted);
+        letter-spacing: 0.1em;
+        font-size: 11pt;
+        text-transform: uppercase;
     }
     a {
-        color: oklch(72% 0.22 295);
+        color: var(--accent);
         text-decoration: none;
     }
     a:hover,
     a:focus {
-        color: oklch(80% 0.19 290);
-        font-weight: bold;
+        color: var(--accent-bright);
     }
 
     .main-container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        padding: 8px 16px 28px;
     }
 
     .main-column {
         display: flex;
         flex-direction: column;
         width: 900px;
+        max-width: 100%;
     }
 
     .group-heading {
         width: 100%;
-        border-bottom: 1px solid oklch(30% 0.04 295);
+        border-bottom: 1px solid var(--glass-border);
     }
 
     .main-heading  {
-        font-size: 80%;
         border-bottom: none;
+    }
+
+    .main-heading h1 {
+        color: var(--on-surface-strong);
+        font-size: 13pt;
+        letter-spacing: 0.14em;
     }
 
     .group-items {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         justify-items: center;
-        gap: 10px;
-        margin-top: 10px;
+        gap: 14px;
+        margin-top: 14px;
     }
 
     .group-item {
@@ -60,32 +124,42 @@
         width: min-content;
     }
 
+    /* each card is a glass panel */
     .item-link {
         display: flex;
         flex-direction: column;
-        padding: 10px;
-        border: 1px solid transparent;
-        border-radius: 3px;
-        transition: border-color .12s, transform .12s;
+        padding: 12px;
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-m);
+        background-color: var(--glass-tint);
+        background-image: var(--glass-sheen);
+        -webkit-backdrop-filter: blur(16px) saturate(135%);
+        backdrop-filter: blur(16px) saturate(135%);
+        box-shadow: var(--elev-1), var(--glass-highlight);
+        transition: border-color .2s var(--ease), transform .2s var(--ease),
+                    box-shadow .2s var(--ease), background-color .2s var(--ease);
     }
 
     .item-link:hover {
-        border-color: oklch(55% 0.18 295);
-        transform: translateY(-2px);
+        border-color: var(--glass-border-strong);
+        background-color: oklch(42% 0.008 265 / 0.38);
+        transform: translateY(-3px);
+        box-shadow: var(--elev-2), var(--glass-highlight);
     }
 
     .item-link:hover h4 {
-        color: oklch(80% 0.19 290);
+        color: var(--accent-bright);
     }
 
+    /* no inset panel here: a filled frame shows through transparent logos */
     .image-frame {
         width: 200px;
         height: 112px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: oklch(13% 0.025 295);
-        border-radius: 2px;
+        background-color: transparent;
+        border-radius: var(--radius-s);
         overflow: hidden;
     }
 
@@ -98,13 +172,19 @@
     }
 
     .group-item h4 {
-        margin-bottom: 5px;
-        transition: color .12s;
+        margin-top: 2px;
+        margin-bottom: 8px;
+        color: var(--on-surface-strong);
+        letter-spacing: 0.03em;
+        font-size: 11pt;
+        transition: color .2s var(--ease);
     }
 
     .description {
         font-size: 10pt;
         text-align: left;
+        color: var(--on-surface-muted);
+        margin-bottom: 2px;
     }
 
 </style>
@@ -259,6 +339,9 @@
 </div>
 
 <script>
+    if (window.parent !== window)
+        document.documentElement.style.backgroundColor = "transparent";
+
     document.querySelector(".main-column").addEventListener("click", (e) => {
         const link = e.target.closest(".item-link");
         if (!link) return;

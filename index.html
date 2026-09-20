@@ -4,6 +4,57 @@
     <meta charset="UTF-8">
     <title>Software by gchristnsn</title>
     <style>
+        :root {
+            color-scheme: dark;
+
+            /* graphite tonal palette */
+            --g-10: oklch(16% 0.005 265);
+            --g-20: oklch(20% 0.006 265);
+            --g-30: oklch(25% 0.007 265);
+            --g-40: oklch(32% 0.008 265);
+            --g-60: oklch(50% 0.009 265);
+            --g-70: oklch(62% 0.008 265);
+            --g-80: oklch(76% 0.006 265);
+            --g-90: oklch(89% 0.004 265);
+
+            /* surface / text roles */
+            --surface: var(--g-20);
+            --on-surface: oklch(87% 0.005 265);
+            --on-surface-muted: oklch(64% 0.008 265);
+            --on-surface-strong: oklch(96% 0.003 265);
+
+            /* accent: cool steel, kept near-neutral */
+            --accent: oklch(83% 0.035 245);
+            --accent-bright: oklch(92% 0.03 245);
+            --accent-dim: oklch(58% 0.03 245);
+
+            /* glass */
+            --glass-tint: oklch(34% 0.008 265 / 0.42);
+            --glass-tint-deep: oklch(26% 0.008 265 / 0.55);
+            --glass-sheen: linear-gradient(155deg,
+                oklch(100% 0 0 / 0.09) 0%,
+                oklch(100% 0 0 / 0.02) 38%,
+                oklch(100% 0 0 / 0.005) 60%,
+                oklch(100% 0 0 / 0.05) 100%);
+            --glass-border: oklch(100% 0 0 / 0.09);
+            --glass-border-strong: oklch(100% 0 0 / 0.17);
+            --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.13);
+            --glass-blur: blur(22px) saturate(135%);
+
+            /* state layers */
+            --state-hover: oklch(100% 0 0 / 0.06);
+
+            /* elevation */
+            --elev-1: 0 1px 2px oklch(0% 0 0 / 0.35), 0 4px 14px oklch(0% 0 0 / 0.28);
+            --elev-2: 0 2px 6px oklch(0% 0 0 / 0.4), 0 14px 38px oklch(0% 0 0 / 0.38);
+
+            --radius-s: 8px;
+            --radius-m: 12px;
+            --radius-l: 16px;
+
+            --ease: cubic-bezier(0.2, 0, 0, 1);
+        }
+
         html.os-linux body {
             letter-spacing: 0.01em;
             -webkit-font-smoothing: antialiased;
@@ -14,7 +65,20 @@
             margin: 0;
             font-family: "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
             overflow: hidden;
-            background-color: oklch(13% 0.025 295);
+            background-color: var(--g-10);
+        }
+
+        /* ambient light the glass refracts */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(1100px 760px at 6% -14%, oklch(55% 0.02 250 / 0.6), transparent 60%),
+                radial-gradient(900px 700px at 104% 114%, oklch(48% 0.016 280 / 0.55), transparent 60%),
+                radial-gradient(820px 600px at 64% 24%, oklch(42% 0.012 210 / 0.35), transparent 66%);
+            pointer-events: none;
         }
 
         h2, h3, h4, h5 {
@@ -40,33 +104,37 @@
         }
 
         a, a:visited {
-            color: oklch(72% 0.22 295);
+            color: var(--accent);
         }
         a:hover, a:focus {
-            color: oklch(80% 0.19 290);
+            color: var(--accent-bright);
         }
 
         ul {
             list-style: none;
-            padding-left: 20px;
-            margin-top: 5px;
+            padding-left: 8px;
+            margin-top: 6px;
         }
 
         li {
+            position: relative;
             cursor: pointer;
-            border-left: 2px solid transparent;
-            padding: 3px 6px;
-            border-radius: 0 3px 3px 0;
-            transition: background-color .12s, border-color .12s, color .12s;
+            padding: 5px 10px 5px 14px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-s);
+            color: var(--on-surface);
+            transition: background-color .18s var(--ease), border-color .18s var(--ease),
+                        color .18s var(--ease), box-shadow .18s var(--ease);
         }
 
         li:hover {
-            background-color: oklch(22% 0.035 295);
-            border-left-color: oklch(50% 0.15 295);
+            background-color: var(--state-hover);
+            border-color: var(--glass-border);
+            color: var(--on-surface-strong);
         }
 
         li:focus-visible {
-            outline: 2px solid oklch(72% 0.22 295);
+            outline: 2px solid var(--accent);
             outline-offset: 1px;
         }
 
@@ -75,8 +143,9 @@
             flex-direction: column;
             position: absolute;
             inset: 0;
+            z-index: 1;
             box-sizing: border-box;
-            border: 1px solid oklch(35% 0.1 295);
+            padding: 14px;
         }
 
         #content::after {
@@ -85,8 +154,8 @@
             inset: 0;
             background: repeating-linear-gradient(
                 to bottom,
-                oklch(0% 0 0 / 0.09) 0px,
-                oklch(0% 0 0 / 0.09) 1px,
+                oklch(0% 0 0 / 0.045) 0px,
+                oklch(0% 0 0 / 0.045) 1px,
                 transparent 1px,
                 transparent 3px
             );
@@ -97,39 +166,56 @@
         #cntnr {
             display: flex;
             flex: 1 1 auto;
+            gap: 14px;
+            min-height: 0;
+        }
+
+        /* glass panel primitive */
+        #left, #right {
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-l);
+            background-color: var(--glass-tint);
+            background-image: var(--glass-sheen);
+            -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: var(--glass-blur);
+            box-shadow: var(--elev-2), var(--glass-highlight);
+            overflow: hidden;
         }
 
         #left {
             flex: 0 0 auto;
             display: flex;
             flex-direction: column;
-            background-color: oklch(15% 0.028 295);
-            border-right: 1px solid oklch(28% 0.04 295);
             position: relative;
         }
 
         #main-header {
             text-transform: none;
             font-size: 14pt;
-            padding: 10px 20px 10px 10px;
+            padding: 12px 22px 12px 12px;
             margin: 0;
-            color: oklch(94% 0.015 295);
-            background-color: oklch(17% 0.055 295);
-            border-bottom: 1px solid oklch(28% 0.04 295);
+            color: var(--on-surface-strong);
+            background-color: oklch(100% 0 0 / 0.045);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.07);
             flex: none;
             display: flex;
             align-items: center;
         }
 
         #main-header a {
-            color: oklch(94% 0.015 295);
+            color: var(--on-surface-strong);
             text-decoration: none;
+        }
+
+        #main-header img {
+            opacity: 0.85;
         }
 
         .blog-heading {
             width: 100%;
-            padding-top: 10px;
-            border-top: 1px solid oklch(28% 0.04 295);
+            padding-top: 14px;
+            border-top: 1px solid var(--glass-border);
         }
 
         #mnu-region {
@@ -154,7 +240,7 @@
             font-family: "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
             font-size: 13px;
             line-height: 1.7;
-            color: oklch(72% 0.22 295);
+            color: var(--g-90);
             white-space: pre-wrap;
             word-break: break-all;
             overflow: hidden;
@@ -168,15 +254,15 @@
             display: flex;
             flex-direction: column;
             gap: 24px;
-            opacity: 0.09;
+            opacity: 0.05;
             transform: rotate(20deg);
             transform-origin: center;
         }
 
         #mnu {
-            color: oklch(90% 0.01 295);
+            color: var(--on-surface);
             background-color: transparent;
-            padding: 0 10px;
+            padding: 0 12px 38px 12px;
             font-size: 14px;
             min-height: 0;
             flex: 1 1 100%;
@@ -184,19 +270,21 @@
             overflow-y: auto;
             overflow-x: hidden;
             scrollbar-width: thin;
-            scrollbar-color: oklch(35% 0.05 295) transparent;
+            scrollbar-color: oklch(100% 0 0 / 0.16) transparent;
             position: relative;
             z-index: 1;
         }
 
         #mnu h3 {
-            color: oklch(75% 0.16 295);
-            letter-spacing: 0.06em;
-            margin-top: 24px;
+            color: var(--on-surface-muted);
+            font-size: 10pt;
+            font-weight: bold;
+            letter-spacing: 0.12em;
+            margin-top: 26px;
         }
 
         #mnu h3:first-child {
-            margin-top: 12px;
+            margin-top: 14px;
         }
 
         #mnu::-webkit-scrollbar {
@@ -208,8 +296,12 @@
         }
 
         #mnu::-webkit-scrollbar-thumb {
-            background-color: oklch(35% 0.05 295);
+            background-color: oklch(100% 0 0 / 0.16);
             border-radius: 4px;
+        }
+
+        #mnu::-webkit-scrollbar-thumb:hover {
+            background-color: oklch(100% 0 0 / 0.26);
         }
 
         #right {
@@ -217,7 +309,7 @@
             flex-direction: column;
             flex: 1 1 auto;
             position: relative;
-            background-color: oklch(13% 0.025 295);
+            min-width: 0;
         }
 
         #loading {
@@ -227,7 +319,7 @@
 
         #itemframe {
             flex: 1 1 auto;
-            /*padding: 10px;*/
+            min-height: 0;
             display: flex;
             flex-direction: column;
         }
@@ -235,6 +327,7 @@
         #itemframe iframe {
             flex: 1 1 auto;
             border: none;
+            background-color: transparent;
         }
 
         .centering-container {
@@ -257,28 +350,54 @@
 
         #hostname {
             position: absolute;
-            left: 10px;
-            bottom: 8px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 7px 12px;
             font-size: 11px;
-            color: oklch(45% 0.03 295);
+            color: var(--on-surface-muted);
             font-family: "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
+            border-top: 1px solid var(--glass-border);
+            background-color: oklch(24% 0.007 265 / 0.82);
+            -webkit-backdrop-filter: blur(18px) saturate(130%);
+            backdrop-filter: blur(18px) saturate(130%);
             pointer-events: none;
+            z-index: 2;
         }
 
+        /* selection reads as a lit glass chip */
         .ui-selected, .ui-selected:hover {
-            background: oklch(30% 0.13 295);
-            color: oklch(97% 0.01 295);
-            border-left-color: oklch(72% 0.22 295);
+            background-color: oklch(100% 0 0 / 0.07);
+            background-image: linear-gradient(160deg,
+                oklch(100% 0 0 / 0.11), oklch(100% 0 0 / 0.02) 60%, oklch(100% 0 0 / 0.06));
+            border-color: var(--glass-border-strong);
+            color: var(--on-surface-strong);
+            box-shadow: var(--glass-highlight), var(--elev-1);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            backdrop-filter: blur(10px) saturate(140%);
         }
 
         .ui-selected::before {
             content: ">";
             margin-right: 4px;
+            color: var(--accent);
+        }
+
+        .ui-selected::after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            border-radius: 2px;
+            background-color: var(--accent);
+            box-shadow: 0 0 8px oklch(83% 0.035 245 / 0.55);
         }
 
         #fallback {
             display: none;
-            color: oklch(80% 0.02 295);
+            color: var(--on-surface);
             text-align: center;
             padding: 20px;
         }
@@ -286,14 +405,18 @@
         #fallback a {
             display: inline-block;
             margin-top: 10px;
-            padding: 8px 16px;
-            border: 1px solid oklch(45% 0.15 295);
-            border-radius: 3px;
-            color: oklch(85% 0.15 295);
+            padding: 9px 18px;
+            border: 1px solid var(--glass-border-strong);
+            border-radius: var(--radius-s);
+            background-color: oklch(100% 0 0 / 0.05);
+            box-shadow: var(--glass-highlight);
+            color: var(--accent);
+            transition: background-color .18s var(--ease), border-color .18s var(--ease);
         }
 
         #fallback a:hover {
-            background-color: oklch(22% 0.05 295);
+            background-color: oklch(100% 0 0 / 0.1);
+            border-color: var(--accent-dim);
         }
     </style>
 </head>
@@ -524,7 +647,7 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
             </div>
             <div id="loading" class="centering-container">
                 <div class="centering-flex-container">
-                    <span style="font-family:'Lucida Console','Consolas',Menlo,Monaco,monospace;color:oklch(72% 0.22 295);font-size:35px;"><span id="spinner-char">|</span> loading...</span>
+                    <span style="font-family:'Lucida Console','Consolas',Menlo,Monaco,monospace;color:var(--accent);font-size:35px;"><span id="spinner-char">|</span> loading...</span>
                 </div>
             </div>
             <div id="fallback" class="centering-container">
