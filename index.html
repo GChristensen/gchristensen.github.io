@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Software by gchristnsn</title>
+    <script>document.documentElement.classList.add("js-loading");</script>
     <style>
         :root {
             color-scheme: dark;
@@ -53,6 +54,23 @@
             --radius-l: 16px;
 
             --ease: cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        /* painted on the canvas even while body is hidden */
+        html {
+            background-color: var(--g-10);
+        }
+
+        /* shell stays hidden until its assets are ready, see reveal() */
+        html.js-loading body {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            body {
+                transition: opacity .3s var(--ease);
+            }
         }
 
         html.os-linux body {
@@ -769,6 +787,27 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
     });
 
     selectItem(location.hash ? findItem(location.hash.substring(1)) : document.getElementById("overview"));
+
+    function imageReady(img) {
+        return img.decode().catch(() => {});
+    }
+
+    function reveal() {
+        requestAnimationFrame(() => document.documentElement.classList.remove("js-loading"));
+    }
+
+    // the right pane has its own spinner, so only wait for the shell's assets, not the iframe
+    const mug = new Image();
+    mug.src = "images/bottom-mug-display.png";
+
+    Promise.race([
+        Promise.all([
+            imageReady(document.querySelector("#main-header img")),
+            imageReady(mug),
+            document.fonts ? document.fonts.ready : null
+        ]),
+        new Promise(resolve => setTimeout(resolve, 3000))
+    ]).then(reveal);
 </script>
 </body>
 </html>
