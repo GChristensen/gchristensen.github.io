@@ -54,6 +54,8 @@
             --elev-1: 0 1px 2px oklch(0% 0 0 / 0.35), 0 4px 14px oklch(0% 0 0 / 0.28);
             --elev-2: 0 2px 6px oklch(0% 0 0 / 0.4), 0 14px 38px oklch(0% 0 0 / 0.38);
 
+            --sidebar-w: 360px;
+
             --radius-s: 8px;
             --radius-m: 12px;
             --radius-l: 16px;
@@ -181,6 +183,13 @@
             z-index: 100;
         }
 
+        /* the overview draws its screenshots in CRTs of its own, so the scanlines
+           stop at the sidebar while it is shown (padding + sidebar + half the gap) */
+        #content.overview-shown::after {
+            right: auto;
+            width: calc(14px + var(--sidebar-w) + 7px);
+        }
+
         #cntnr {
             display: flex;
             flex: 1 1 auto;
@@ -202,7 +211,7 @@
 
         #left {
             flex: 0 0 auto;
-            width: 320px;
+            width: var(--sidebar-w);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -230,12 +239,6 @@
 
         #main-header img {
             opacity: 0.85;
-        }
-
-        .blog-heading {
-            width: 100%;
-            padding-top: 14px;
-            border-top: 1px solid var(--glass-border);
         }
 
         #mnu-region {
@@ -279,41 +282,134 @@
             transform-origin: center;
         }
 
-        /* the pinned overview entry, outside the scrolling list */
+        /* the pinned overview entry: a full-width bar whose icon sits over the rail column,
+           selected the same way as an active rail tab */
         .softlist.pinned {
             flex: none;
-            margin: 8px 0 4px;
-            padding: 0 10px;
+            margin: 0;
+            padding: 0;
             position: relative;
             z-index: 1;
             font-size: 14px;
         }
 
         .pinned li {
-            display: flex;
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
             align-items: center;
-            gap: 8px;
+            height: 44px;
+            padding: 0 18px 0 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        .pinned li:hover {
+            background-color: oklch(100% 0 0 / 0.04);
+        }
+
+        .pinned li:focus-visible {
+            outline-offset: -2px;
         }
 
         .pinned svg {
-            flex: none;
-            stroke: var(--accent);
+            justify-self: center;
+            stroke: currentColor;
         }
 
         .pinned .count {
-            margin-left: auto;
             font-size: 11px;
             color: var(--on-surface-muted);
         }
 
-        /* zone 1: the list takes all the height above the illustration, scrolls only when that is not enough */
+        .pinned li.ui-selected,
+        .pinned li.ui-selected:hover {
+            color: var(--accent-bright);
+            background-color: oklch(100% 0 0 / 0.035);
+            background-image: none;
+            box-shadow: none;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+        }
+
+        .pinned li.ui-selected::after {
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+        }
+
+        /* zone 1: category rail + the active category's list, all the height above the illustration */
         #mnu-zone {
             position: relative;
             z-index: 2;
             flex: 1 1 auto;
             min-height: 0;
             display: flex;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        #rail {
+            flex: 0 0 60px;
+            display: flex;
             flex-direction: column;
+            overflow: hidden;
+            border-right: 1px solid oklch(100% 0 0 / 0.1);
+            background-color: oklch(0% 0 0 / 0.14);
+        }
+
+        .rail-tab {
+            position: relative;
+            flex: none;
+            height: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0;
+            border: none;
+            border-bottom: 1px solid oklch(100% 0 0 / 0.07);
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: oklch(58% 0.009 265);
+            transition: color .18s var(--ease), background-color .18s var(--ease);
+        }
+
+        .rail-tab svg {
+            display: block;
+            shape-rendering: crispEdges;
+        }
+
+        .rail-tab:hover {
+            color: oklch(85% 0.006 265);
+            background-color: oklch(100% 0 0 / 0.04);
+        }
+
+        .rail-tab:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        /* the active tab merges into the list panel next to it */
+        .rail-tab.active {
+            margin-right: -1px;
+            color: var(--accent-bright);
+            background-color: oklch(100% 0 0 / 0.035);
+        }
+
+        .rail-tab.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            border-radius: 2px;
+            background-color: var(--accent);
+            box-shadow: 0 0 8px oklch(83% 0.035 245 / 0.55);
         }
 
         #mnu {
@@ -322,8 +418,10 @@
             color: var(--on-surface);
             padding: 0 18px 12px 10px;
             font-size: 14px;
-            flex: 0 1 auto;
+            flex: 1 1 auto;
+            min-width: 0;
             min-height: 0;
+            background-color: oklch(100% 0 0 / 0.035);
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-top),
@@ -349,8 +447,8 @@
             font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.14em;
-            margin: 16px 0 0;
-            padding: 0 12px 0 4px;
+            margin: 14px 0 0;
+            padding: 0 4px 0 4px;
         }
 
         #mnu li {
@@ -358,8 +456,8 @@
             padding-bottom: 4px;
         }
 
-        #mnu h3:first-child {
-            margin-top: 10px;
+        #mnu .group[hidden] {
+            display: none;
         }
 
         #mnu h3 .count {
@@ -370,7 +468,7 @@
 
         /* items hang off a dotted guide line under their heading */
         #mnu .softlist {
-            margin: 6px 0 0 9px;
+            margin: 8px 0 0 5px;
             padding-left: 8px;
             border-left: 1px dotted oklch(100% 0 0 / 0.38);
         }
@@ -475,12 +573,6 @@
             box-shadow: var(--glass-highlight), var(--elev-1);
             -webkit-backdrop-filter: blur(10px) saturate(140%);
             backdrop-filter: blur(10px) saturate(140%);
-        }
-
-        .ui-selected::before {
-            content: ">";
-            margin-right: 4px;
-            color: var(--accent);
         }
 
         .ui-selected::after {
@@ -704,14 +796,20 @@ const overlay = new Overlay(document.body);
 overlay.bindHotkey('Escape', () => overlay.toggle());
 </pre></div></div>
                 <div id="mnu-zone">
+                <!-- rail tabs are built from the groups below: data-group must match the
+                     section id in html/overview.html, data-icon a key of RAIL_ICONS -->
+                <div id="rail" role="tablist" aria-orientation="vertical" aria-label="Categories"></div>
                 <div id="mnu">
+                <section class="group" data-group="cli" data-label="cli" data-icon="cli">
                 <h3>Command Interfaces</h3>
                 <ul class="softlist">
                     <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">$ Enso Open-Source</li>
                     <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">$ iShell</li>
                     <li data-hash="scarlett" data-url="https://gchristensen.github.io/scarlett/">$ Scarlett</li>
                 </ul>
+                </section>
 
+                <section class="group" data-group="ext" data-label="ext" data-icon="ext">
                 <h3>Browser Extensions</h3>
                 <ul class="softlist">
                     <li data-hash="scrapyard" data-url="https://gchristensen.github.io/scrapyard/">$ Scrapyard</li>
@@ -721,35 +819,50 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
                     <!--li data-hash="mix-slideshow" data-url="https://gchristensen.github.io/mix-slideshow/">$ Mix Slideshow</li>
                     <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">$ MultiButton</li-->
                 </ul>
+                </section>
 
+                <section class="group" data-group="web" data-label="web" data-icon="web">
                 <h3>Web-apps</h3>
                 <ul class="softlist">
                     <li data-hash="NewsBlurMod" data-url="https://gchristensen.github.io/NewsBlurMod/">$ NewsBlurMod</li>
                     <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">$ Feedxcavator</li>
                 </ul>
+                </section>
 
+                <section class="group" data-group="app" data-label="app" data-icon="app">
                 <h3>Desktop-apps</h3>
                 <ul class="softlist">
                     <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">$ Enso Retreat</li>
                 </ul>
+                </section>
 
+                <section class="group" data-group="edit" data-label="edit" data-icon="edit">
                 <h3>Editors</h3>
                 <ul class="softlist">
                     <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">$ Rho Emacs</li>
                 </ul>
+                </section>
 
-                <h3>Skins &amp; Windows Gadgets</h3>
+                <section class="group" data-group="skin" data-label="skin" data-icon="skin" data-name="Skins &amp; Windows Gadgets">
+                <h3>Skins</h3>
                 <ul class="softlist">
                     <li data-hash="silentnight" data-url="https://gchristensen.github.io/silentnight_v6_mod_foobar2000_skin/">$ Silent Night Mod</li>
+                </ul>
+
+                <h3>Windows Gadgets</h3>
+                <ul class="softlist">
                     <li data-hash="slideshow" data-url="html/slideshow.html">$ Advanced SlideShow Gadget</li>
                     <li data-hash="sunlight" data-url="html/sunlight.html">$ Sunlight World Map Gadget</li>
                 </ul>
+                </section>
 
-                <h3 class="blog-heading">Blogs</h3>
+                <section class="group" data-group="blog" data-label="blog" data-icon="blog">
+                <h3>Blogs</h3>
                 <ul class="softlist">
                     <li data-hash="posts" data-url="https://gchristensen.github.io/posts/">$ G/POSTS</li>
                     <!--li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">$ The New Kinetic</li-->
                 </ul>
+                </section>
                 </div>
                 </div>
                 <div class="zone-divider"></div>
@@ -819,6 +932,9 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
         const selected = menu.querySelector(".ui-selected");
         if (selected) selected.classList.remove("ui-selected");
         item.classList.add("ui-selected");
+        document.getElementById("content").classList.toggle("overview-shown", item.id === "overview");
+        const group = item.closest(".group");
+        if (group) selectGroup(group.dataset.group, false);
         showInfo(item);
     }
 
@@ -878,6 +994,98 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
 
     document.getElementById("total-count").textContent = padCount(list.querySelectorAll(".softlist li").length);
 
+    // 12x12 one-bit rail icons, one string per row, "#" is a lit pixel
+    const RAIL_ICONS = {
+        cli:  ["############", "#.#.#......#", "############", "#..........#", "#.#........#", "#..#.......#",
+               "#...#......#", "#..#.......#", "#.#...####.#", "#..........#", "#..........#", "############"],
+        ext:  ["...##.......", "..####......", "...##.......", "#########...", "#########...", "##########..",
+               "###########.", "##########..", "#########...", "#########...", "#########...", "............"],
+        // globe: two arched meridians bulging toward the equator, meeting the outer circle at the poles
+        web:  ["....####....", "..##.##.##..", ".#..#..#..#.", ".#.#....#.#.", "#..#....#..#", "############",
+               "#..#....#..#", "#..#....#..#", ".#.#....#.#.", ".#..#..#..#.", "..##.##.##..", "....####...."],
+        app:  ["...#########", "...#########", "...#.......#", "#########..#", "#########..#", "#.......#..#",
+               "#.......#..#", "#.......####", "#.......#...", "#.......#...", "#.......#...", "#########..."],
+        edit: [".........##.", "........####", ".......#####", "......#...#.", ".....#...#..", "....#...#...",
+               "...#...#....", "..#...#.....", ".#...#......", ".##.#.......", ".###........", "#..........."],
+        // painter's palette in outline (paint wells, thumb-hole ring, dent on the left)
+        // with a schematic brush to its right: bristle tuft and handle
+        skin: ["...######.....#.", ".##......##..###", "#...##.....#.###", "#...##..##.#..#.", "#.......##.#..#.", "#..##......#..#.",
+               "#..##..###.#..#.", ".#.....#.#.#..#.", "..#....###.#..#.", ".#.........#..#.", "..##.....##...#.", "....#####......."],
+        blog: [".#######....", ".#.....##...", ".#.....#.#..", ".#.....####.", ".#........#.", ".#.######.#.",
+               ".#........#.", ".#.######.#.", ".#........#.", ".#.####...#.", ".#........#.", ".##########."]
+    };
+
+    // icons are drawn at 2x; most are 12x12, but an icon may be wider (see skin)
+    function railIcon(name) {
+        const rows = RAIL_ICONS[name] || [];
+        const w = rows.length ? rows[0].length : 12;
+        const h = rows.length || 12;
+        const d = rows.map((row, y) => row.split("").map((c, x) => c === "#" ? `M${x} ${y}h1v1h-1z` : "").join("")).join("");
+        return `<svg aria-hidden="true" width="${w * 2}" height="${h * 2}" viewBox="0 0 ${w} ${h}"><path d="${d}" fill="currentColor"/></svg>`;
+    }
+
+    const rail = document.getElementById("rail");
+    const groups = Array.from(list.querySelectorAll(".group"));
+    let activeGroup = null;
+
+    groups.forEach(group => {
+        // a group split into several lists names itself with data-name
+        const name = group.dataset.name || group.querySelector("h3").firstChild.textContent.trim();
+        const tab = document.createElement("button");
+        tab.type = "button";
+        tab.className = "rail-tab";
+        tab.title = name;
+        tab.dataset.group = group.dataset.group;
+        tab.setAttribute("role", "tab");
+        tab.setAttribute("aria-label", name);
+        tab.innerHTML = railIcon(group.dataset.icon);
+        const label = document.createElement("span");
+        label.textContent = group.dataset.label;
+        tab.appendChild(label);
+        rail.appendChild(tab);
+    });
+
+    function overviewShown() {
+        return menu.querySelector(".ui-selected") === document.getElementById("overview");
+    }
+
+    // shows the group's list; with scrollOverview, also scrolls the overview to its section if it is open
+    function selectGroup(id, scrollOverview) {
+        const group = groups.find(g => g.dataset.group === id);
+        if (!group) return;
+
+        if (group !== activeGroup) {
+            activeGroup = group;
+            groups.forEach(g => g.hidden = g !== group);
+            rail.querySelectorAll(".rail-tab").forEach(tab => {
+                const active = tab.dataset.group === id;
+                tab.classList.toggle("active", active);
+                tab.setAttribute("aria-selected", active);
+                tab.tabIndex = active ? 0 : -1;
+            });
+            list.scrollTop = 0;
+            updateFades();
+        }
+
+        if (scrollOverview && overviewShown())
+            frame.contentWindow.postMessage({type: "scroll-to-group", group: id}, "*");
+    }
+
+    rail.addEventListener("click", e => {
+        const tab = e.target.closest(".rail-tab");
+        if (tab) selectGroup(tab.dataset.group, true);
+    });
+
+    rail.addEventListener("keydown", e => {
+        if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+        e.preventDefault();
+        const tabs = Array.from(rail.children);
+        const step = e.key === "ArrowDown" ? 1 : tabs.length - 1;
+        const next = tabs[(tabs.indexOf(document.activeElement) + step) % tabs.length];
+        next.focus();
+        selectGroup(next.dataset.group, true);
+    });
+
     function updateFades() {
         list.classList.toggle("fade-top", list.scrollTop > 1);
         list.classList.toggle("fade-bottom", list.scrollTop + list.clientHeight < list.scrollHeight - 1);
@@ -886,6 +1094,7 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
     list.addEventListener("scroll", updateFades, {passive: true});
     new ResizeObserver(updateFades).observe(list);
     retroScrollbar(list, document.getElementById("mnu-zone"));
+    selectGroup(groups[0].dataset.group, false);
 
     // keep the keyboard-focused entry visible inside the scrolling list
     list.addEventListener("focusin", e => e.target.scrollIntoView({block: "nearest"}));
@@ -902,6 +1111,10 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
         if (!e.data) return;
         if (e.data.type === "select") {
             selectItem(findItem(e.data.hash));
+        }
+        // the overview reports the section the reader has scrolled to
+        else if (e.data.type === "overview-group" && e.source === frame.contentWindow) {
+            selectGroup(e.data.group, false);
         }
         else if (e.data.type === "gc-forward-link" && e.data.data
                  && sameDomain(e.origin) && sameDomain(e.data.data)) {

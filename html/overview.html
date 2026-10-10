@@ -82,6 +82,7 @@
         display: flex;
         counter-increment: group;
         counter-reset: item;
+        scroll-margin-top: 24px;
     }
 
     .group-label {
@@ -138,14 +139,15 @@
         border-radius: 2px;
     }
 
-    /* images keep their natural size: small screenshots and logos sit centered in the slot */
+    /* images keep their natural size: screenshots sit in a CRT, logos centered in the slot as they are */
     .plate {
-        flex: 0 0 320px;
-        height: 180px;
+        --screen-w: 320px;
+        --screen-h: 180px;
+        flex: 0 0 calc(var(--screen-w) + 28px);
+        height: calc(var(--screen-h) + 38px);
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
     }
 
     .plate img {
@@ -153,6 +155,60 @@
         max-width: 100%;
         max-height: 100%;
         transition: filter .15s;
+    }
+
+    /* thick rounded case; it hugs the screenshot, whatever its size */
+    .crt {
+        position: relative;
+        padding: 14px 14px 24px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, oklch(33% 0.009 265), oklch(26% 0.008 265));
+        box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.16), inset 0 -2px 0 oklch(0% 0 0 / 0.25),
+                    0 0 0 1px oklch(0% 0 0 / 0.5), 0 12px 26px oklch(0% 0 0 / 0.35);
+    }
+
+    .crt img {
+        max-width: var(--screen-w);
+        max-height: var(--screen-h);
+    }
+
+    /* curved-glass screen: rounded corners, faint scanlines and a vignette over the picture */
+    .screen {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 0 2px oklch(16% 0.005 265);
+    }
+
+    .screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        pointer-events: none;
+        background: repeating-linear-gradient(to bottom, oklch(0% 0 0 / 0.14) 0 1px, transparent 1px 3px);
+        box-shadow: inset 0 0 28px oklch(0% 0 0 / 0.55);
+    }
+
+    .crt-badge {
+        position: absolute;
+        left: 18px;
+        bottom: 7px;
+        font-family: var(--mono);
+        font-size: 8px;
+        letter-spacing: 0.12em;
+        color: oklch(60% 0.008 265);
+    }
+
+    .crt-led {
+        position: absolute;
+        right: 20px;
+        bottom: 9px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: oklch(83% 0.06 245);
+        box-shadow: 0 0 5px oklch(83% 0.08 245 / 0.8);
     }
 
     .plate img.inverted {
@@ -257,8 +313,8 @@
         }
 
         .plate {
-            flex-basis: 280px;
-            height: 158px;
+            --screen-w: 280px;
+            --screen-h: 158px;
         }
     }
 
@@ -278,11 +334,11 @@
         </div>
     </header>
 
-    <section class="group">
+    <section class="group" id="cli">
         <div class="group-label"><h2>Command Interfaces</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#enso" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/enso-portable/media/screen.jpg" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/enso-portable/media/screen.jpg" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Enso Open-Source</h3>
                     <p>System-wide transparent overlay command line extensible in Python</p>
@@ -290,7 +346,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#ishell" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/ishell/media/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/ishell/media/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>iShell</h3>
                     <p>Browser-based command line extensible in JavaScript</p>
@@ -308,11 +364,11 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="ext">
         <div class="group-label"><h2>Browser Extensions</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#scrapyard" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/scrapyard/media/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/scrapyard/media/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Scrapyard</h3>
                     <p>Advanced bookmark manager with page archiving</p>
@@ -320,7 +376,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#lightning-tab-groups" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/lightning-tab-groups/media/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/lightning-tab-groups/media/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Lightning Tab Groups</h3>
                     <p>Firefox tab group manager for keyboard ninjas</p>
@@ -328,7 +384,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#lightning-menu" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/lightning-menu/images/screen.jpg" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/lightning-menu/images/screen.jpg" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Lightning Menu</h3>
                     <p>A toolbar button with a drop-down menu of links</p>
@@ -336,7 +392,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#torrent-add" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/torrent-add/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/torrent-add/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Add Torrent To</h3>
                     <p>Add torrents to uTorrent or qBittorrent from the browser context menu</p>
@@ -344,7 +400,7 @@
                 </div>
             </a>
             <!--a href="https://gchristensen.github.io/#mix-slideshow" class="item">
-                <div class="plate"><img src="https://raw.githubusercontent.com/GChristensen/mix-slideshow/gh-pages/media/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://raw.githubusercontent.com/GChristensen/mix-slideshow/gh-pages/media/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Mix Slideshow</h3>
                     <p>Mix images from different sources in a single slideshow</p>
@@ -362,11 +418,11 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="web">
         <div class="group-label"><h2>Web-apps</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#NewsBlurMod" class="item">
-                <div class="plate"><img src="https://raw.githubusercontent.com/GChristensen/NewsBlurMod/refs/heads/master/_layouts/screen_500.jpg" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://raw.githubusercontent.com/GChristensen/NewsBlurMod/refs/heads/master/_layouts/screen_500.jpg" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>NewsBlurMod</h3>
                     <p>NewsBlur fork with improved usability</p>
@@ -374,7 +430,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#feedxcavator" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/feedxcavator/media/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/feedxcavator/media/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Feedxcavator</h3>
                     <p>Experimental programmable RSS extractor and server</p>
@@ -384,11 +440,11 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="app">
         <div class="group-label"><h2>Desktop-apps</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#retreat" class="item">
-                <div class="plate"><img src="https://gchristensen.github.io/retreat/media/screen.jpg" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://gchristensen.github.io/retreat/media/screen.jpg" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Enso Retreat</h3>
                     <p>A break-reminder program with transparent interface</p>
@@ -398,7 +454,7 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="edit">
         <div class="group-label"><h2>Editors</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#rho" class="item">
@@ -412,11 +468,11 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="skin">
         <div class="group-label"><h2>Skins &amp; Windows Gadgets</h2></div>
         <div class="group-items">
             <a href="https://gchristensen.github.io/#silentnight" class="item">
-                <div class="plate"><img src="https://raw.githubusercontent.com/GChristensen/silentnight_v6_mod_foobar2000_skin/refs/heads/master/screen3.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://raw.githubusercontent.com/GChristensen/silentnight_v6_mod_foobar2000_skin/refs/heads/master/screen3.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Silent Night V6 Mod</h3>
                     <p>Feature-rich skin for foobar2000 audio player with embedded file explorer tree</p>
@@ -424,7 +480,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#slideshow" class="item">
-                <div class="plate"><img src="../images/overview/slideshow.jpg" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="../images/overview/slideshow.jpg" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Large Slideshow Gadget</h3>
                     <p>Advanced slideshow gadget for Windows Sidebar</p>
@@ -432,7 +488,7 @@
                 </div>
             </a>
             <a href="https://gchristensen.github.io/#sunlight" class="item">
-                <div class="plate"><img src="https://raw.githubusercontent.com/GChristensen/sunligth-world-map-gadget/master/screen.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="https://raw.githubusercontent.com/GChristensen/sunligth-world-map-gadget/master/screen.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>Sunlight World Map</h3>
                     <p>Shows the current Sun and Moon position</p>
@@ -442,11 +498,11 @@
         </div>
     </section>
 
-    <section class="group">
+    <section class="group" id="blog">
         <div class="group-label"><h2>Blogs</h2></div>
         <div class="group-items">
             <!--a href="https://gchristensen.github.io/#kinetic" class="item">
-                <div class="plate"><img src="../images/overview/nk.png" alt=""></div>
+                <div class="plate"><div class="crt"><div class="screen"><img src="../images/overview/nk.png" alt=""></div><span class="crt-badge" aria-hidden="true">G/C</span><span class="crt-led" aria-hidden="true"></span></div></div>
                 <div class="item-text">
                     <h3>The New Kinetic</h3>
                     <p>g/christensen's personal blog</p>
@@ -479,4 +535,48 @@
         const hash = link.href.split("#")[1];
         if (hash) window.parent.postMessage({type: "select", hash}, "*");
     });
+
+    // sync with the shell's category rail: the rail scrolls us to a section,
+    // and we report the section the reader scrolls to
+    if (window.parent !== window) {
+        const sections = Array.from(document.querySelectorAll(".group[id]"));
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        let reported = null;
+        // after a rail-driven scroll, stay quiet until the reader scrolls by hand,
+        // otherwise a short last section would flip the rail to the last tab
+        let quiet = false;
+
+        function visibleSection() {
+            const page = document.scrollingElement;
+            if (page.scrollTop + page.clientHeight >= page.scrollHeight - 2)
+                return sections[sections.length - 1];
+            let current = sections[0];
+            for (const section of sections)
+                if (section.getBoundingClientRect().top <= 120)
+                    current = section;
+            return current;
+        }
+
+        function report() {
+            if (quiet) return;
+            const section = visibleSection();
+            if (section && section.id !== reported) {
+                reported = section.id;
+                window.parent.postMessage({type: "overview-group", group: section.id}, "*");
+            }
+        }
+
+        ["wheel", "touchstart", "keydown", "pointerdown"].forEach(type =>
+            window.addEventListener(type, () => { quiet = false; }, {passive: true}));
+        window.addEventListener("scroll", report, {passive: true});
+
+        window.addEventListener("message", (e) => {
+            if (e.source !== window.parent || !e.data || e.data.type !== "scroll-to-group") return;
+            const section = document.getElementById(e.data.group);
+            if (!section) return;
+            quiet = true;
+            reported = section.id;
+            section.scrollIntoView({block: "start", behavior: reducedMotion.matches ? "auto" : "smooth"});
+        });
+    }
 </script>
