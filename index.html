@@ -5,6 +5,10 @@
     <meta name="color-scheme" content="dark">
     <title>Software by gchristnsn</title>
     <script>document.documentElement.classList.add("js-loading");</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="css/retro-scrollbar.css" rel="stylesheet">
     <style>
         :root {
             color-scheme: dark;
@@ -77,7 +81,7 @@
 
         body {
             margin: 0;
-            font-family: "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
+            font-family: "IBM Plex Mono", "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
             overflow: hidden;
             background-color: var(--g-10);
         }
@@ -198,6 +202,7 @@
 
         #left {
             flex: 0 0 auto;
+            width: 320px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -205,7 +210,8 @@
 
         #main-header {
             text-transform: none;
-            font-size: 14pt;
+            font-size: 15px;
+            white-space: nowrap;
             padding: 12px 22px 12px 12px;
             margin: 0;
             color: var(--on-surface-strong);
@@ -273,53 +279,129 @@
             transform-origin: center;
         }
 
-        #mnu {
-            color: var(--on-surface);
-            background-color: transparent;
-            background-image: url('images/bottom-mug-display.png');
-            background-repeat: no-repeat;
-            background-position: bottom;
-            background-size: contain;
-            padding: 0 12px 38px 12px;
-            font-size: 14px;
-            min-height: 0;
-            flex: 1 1 100%;
-            height: 0;
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: oklch(100% 0 0 / 0.16) transparent;
+        /* the pinned overview entry, outside the scrolling list */
+        .softlist.pinned {
+            flex: none;
+            margin: 8px 0 4px;
+            padding: 0 10px;
             position: relative;
             z-index: 1;
+            font-size: 14px;
+        }
+
+        .pinned li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pinned svg {
+            flex: none;
+            stroke: var(--accent);
+        }
+
+        .pinned .count {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--on-surface-muted);
+        }
+
+        /* zone 1: the list takes all the height above the illustration, scrolls only when that is not enough */
+        #mnu-zone {
+            position: relative;
+            z-index: 2;
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #mnu {
+            --fade-top: 0px;
+            --fade-bottom: 0px;
+            color: var(--on-surface);
+            padding: 0 18px 12px 10px;
+            font-size: 14px;
+            flex: 0 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-top),
+                                                #000 calc(100% - var(--fade-bottom)), transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0, #000 var(--fade-top),
+                                        #000 calc(100% - var(--fade-bottom)), transparent 100%);
+        }
+
+        /* fades appear only on the side that has more content */
+        #mnu.fade-top {
+            --fade-top: 24px;
+        }
+
+        #mnu.fade-bottom {
+            --fade-bottom: 32px;
         }
 
         #mnu h3 {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
             color: var(--on-surface-muted);
-            font-size: 10pt;
-            font-weight: bold;
-            letter-spacing: 0.12em;
-            margin-top: 26px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            margin: 16px 0 0;
+            padding: 0 12px 0 4px;
+        }
+
+        #mnu li {
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
 
         #mnu h3:first-child {
-            margin-top: 14px;
+            margin-top: 10px;
         }
 
-        #mnu::-webkit-scrollbar {
-            width: 8px;
+        #mnu h3 .count {
+            font-weight: 400;
+            letter-spacing: 0;
+            color: var(--g-60);
         }
 
-        #mnu::-webkit-scrollbar-track {
-            background: transparent;
+        /* items hang off a dotted guide line under their heading */
+        #mnu .softlist {
+            margin: 6px 0 0 9px;
+            padding-left: 8px;
+            border-left: 1px dotted oklch(100% 0 0 / 0.38);
         }
 
-        #mnu::-webkit-scrollbar-thumb {
-            background-color: oklch(100% 0 0 / 0.16);
-            border-radius: 4px;
+        .zone-divider {
+            position: relative;
+            z-index: 1;
+            flex: none;
+            height: 1px;
+            margin: 0 16px;
+            background: linear-gradient(to right, transparent, oklch(100% 0 0 / 0.14), transparent);
         }
 
-        #mnu::-webkit-scrollbar-thumb:hover {
-            background-color: oklch(100% 0 0 / 0.26);
+        /* zone 2: reserved for the illustration. The image sits on the bottom bar with
+           its stand fully visible, and its top (the monitor corner) rises above the divider */
+        #stage {
+            position: relative;
+            z-index: 1;
+            flex: none;
+            aspect-ratio: 1472 / 620;
+        }
+
+        #stage::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 4px;
+            aspect-ratio: 1472 / 720;
+            background: url('images/bottom-mug-display.png') no-repeat center / 100% auto;
+            pointer-events: none;
         }
 
         #right {
@@ -374,7 +456,7 @@
             padding: 7px 12px;
             font-size: 11px;
             color: var(--on-surface-muted);
-            font-family: "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
+            font-family: "IBM Plex Mono", "Lucida Console", "Consolas", Menlo, Monaco, "DejaVu Sans Mono", monospace;
             border-top: 1px solid var(--glass-border);
             background-color: oklch(24% 0.007 265 / 0.82);
             -webkit-backdrop-filter: blur(18px) saturate(130%);
@@ -445,6 +527,14 @@
             <h2 id="main-header"><img src="images/fa_dense_wh.png" alt="">&nbsp;<a href="/">Software by g/christensen</a></h2>
 
             <div id="hostname">root@gchristensen:~#</div>
+
+            <ul class="softlist pinned">
+                <li id="overview" data-hash="overview" data-url="html/overview.html">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke-width="1.3"><rect x="1.5" y="1.5" width="4.5" height="4.5"/><rect x="8" y="1.5" width="4.5" height="4.5"/><rect x="1.5" y="8" width="4.5" height="4.5"/><rect x="8" y="8" width="4.5" height="4.5"/></svg>
+                    Overview
+                    <span class="count" id="total-count"></span>
+                </li>
+            </ul>
 
             <div id="mnu-region">
                 <div id="code-bg"><div id="code-cols"><pre>function loadModule(path) {
@@ -613,9 +703,9 @@ export default shell;
 const overlay = new Overlay(document.body);
 overlay.bindHotkey('Escape', () => overlay.toggle());
 </pre></div></div>
+                <div id="mnu-zone">
                 <div id="mnu">
                 <h3>Command Interfaces</h3>
-                <div id="overview" data-hash="overview" data-url="html/overview.html" style="display: none"></div>
                 <ul class="softlist">
                     <li data-hash="enso" data-url="https://gchristensen.github.io/enso-portable/">$ Enso Open-Source</li>
                     <li data-hash="ishell" data-url="https://gchristensen.github.io/ishell/">$ iShell</li>
@@ -632,16 +722,20 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
                     <li data-hash="multibutton" data-url="https://gchristensen.github.io/multibutton/">$ MultiButton</li-->
                 </ul>
 
-                <h3>Hackable</h3>
+                <h3>Web-apps</h3>
                 <ul class="softlist">
                     <li data-hash="NewsBlurMod" data-url="https://gchristensen.github.io/NewsBlurMod/">$ NewsBlurMod</li>
                     <li data-hash="feedxcavator" data-url="https://gchristensen.github.io/feedxcavator/">$ Feedxcavator</li>
-                    <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">$ Rho Emacs</li>
                 </ul>
 
-                <h3>Applications</h3>
+                <h3>Desktop-apps</h3>
                 <ul class="softlist">
                     <li data-hash="retreat" data-url="https://gchristensen.github.io/retreat/">$ Enso Retreat</li>
+                </ul>
+
+                <h3>Editors</h3>
+                <ul class="softlist">
+                    <li data-hash="rho" data-url="https://gchristensen.github.io/rho-emacs/">$ Rho Emacs</li>
                 </ul>
 
                 <h3>Skins &amp; Windows Gadgets</h3>
@@ -657,6 +751,9 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
                     <!--li data-hash="kinetic" data-url="https://thenewkinetic.blogspot.com">$ The New Kinetic</li-->
                 </ul>
                 </div>
+                </div>
+                <div class="zone-divider"></div>
+                <div id="stage"></div>
             </div>
         </div>
 
@@ -682,11 +779,13 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
 <!-- for robots -->
 <a href="https://gchristensen.github.io/html/overview.html" style="display: none"></a>
 
+<script src="js/retro-scrollbar.js"></script>
 <script>
     if (/Linux/i.test(navigator.userAgent) && !/Android/i.test(navigator.userAgent)) {
         document.documentElement.classList.add("os-linux");
     }
-    const menu = document.getElementById("mnu");
+    const menu = document.getElementById("left");
+    const list = document.getElementById("mnu");
     const itemframe = document.getElementById("itemframe");
     const frame = itemframe.querySelector("iframe");
     const loading = document.getElementById("loading");
@@ -763,6 +862,33 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
         li.setAttribute("tabindex", "0");
         li.setAttribute("role", "button");
     });
+
+    // counts are derived from the list, so adding an item is a single <li>
+    function padCount(n) {
+        return String(n).padStart(2, "0");
+    }
+
+    list.querySelectorAll("h3").forEach(h3 => {
+        const ul = h3.nextElementSibling;
+        const count = document.createElement("span");
+        count.className = "count";
+        count.textContent = padCount(ul ? ul.querySelectorAll("li").length : 0);
+        h3.appendChild(count);
+    });
+
+    document.getElementById("total-count").textContent = padCount(list.querySelectorAll(".softlist li").length);
+
+    function updateFades() {
+        list.classList.toggle("fade-top", list.scrollTop > 1);
+        list.classList.toggle("fade-bottom", list.scrollTop + list.clientHeight < list.scrollHeight - 1);
+    }
+
+    list.addEventListener("scroll", updateFades, {passive: true});
+    new ResizeObserver(updateFades).observe(list);
+    retroScrollbar(list, document.getElementById("mnu-zone"));
+
+    // keep the keyboard-focused entry visible inside the scrolling list
+    list.addEventListener("focusin", e => e.target.scrollIntoView({block: "nearest"}));
 
     function sameDomain(url) {
         try {
