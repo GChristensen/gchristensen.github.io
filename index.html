@@ -221,14 +221,18 @@
             text-transform: none;
             font-size: 15px;
             white-space: nowrap;
-            padding: 12px 22px 12px 12px;
+            height: 56px;
+            box-sizing: border-box;
+            padding: 0 22px 0 0;
             margin: 0;
             color: var(--on-surface-strong);
             background-color: oklch(100% 0 0 / 0.045);
             border-bottom: 1px solid var(--glass-border);
             box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.07);
             flex: none;
-            display: flex;
+            /* same 60px column as the rail and the pinned overview entry */
+            display: grid;
+            grid-template-columns: 60px 1fr;
             align-items: center;
         }
 
@@ -238,6 +242,7 @@
         }
 
         #main-header img {
+            justify-self: center;
             opacity: 0.85;
         }
 
@@ -666,7 +671,7 @@
 <div id="content">
     <div id="cntnr">
         <div id="left">
-            <h2 id="main-header"><img src="images/fa_dense_wh.png" alt="">&nbsp;<a href="/">g/christensen</a></h2>
+            <h2 id="main-header"><img src="images/fa_dense_wh.png" alt=""><a href="/">g/christensen</a></h2>
 
             <div id="hostname">root@gchristensen:~#</div>
 
