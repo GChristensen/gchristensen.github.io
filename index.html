@@ -520,13 +520,11 @@
             cursor: default;
         }
 
-        /* easter egg: five clicks on the mug */
+        /* easter egg: five clicks on the mug. It lives outside the sidebar, which clips
+           its content, and is laid over the left 40% of #desk by script */
         #heraldic {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 40%;
-            height: 100%;
+            position: fixed;
+            z-index: 2147483647;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -664,6 +662,7 @@
     </style>
 </head>
 <body>
+<div id="heraldic" hidden><img alt=""></div>
 <div id="content">
     <div id="cntnr">
         <div id="left">
@@ -922,7 +921,7 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
                 </div>
                 </div>
                 <div class="zone-divider"></div>
-                <div id="stage"><div id="desk"><div id="mug"></div><div id="heraldic" hidden><img alt=""></div></div></div>
+                <div id="stage"><div id="desk"><div id="mug"></div></div></div>
             </div>
         </div>
 
@@ -1182,15 +1181,28 @@ overlay.bindHotkey('Escape', () => overlay.toggle());
 
     // five clicks on the mug, each within a second and a half of the last, toggle the coat of arms
     let mugClicks = 0, mugTimer;
+    const heraldic = document.getElementById("heraldic");
+
+    function placeHeraldic() {
+        if (heraldic.hidden) return;
+        const desk = document.getElementById("desk").getBoundingClientRect();
+        heraldic.style.left = desk.left + "px";
+        heraldic.style.top = desk.top + "px";
+        heraldic.style.width = desk.width * 0.4 + "px";
+        heraldic.style.height = desk.height + "px";
+    }
+
+    window.addEventListener("resize", placeHeraldic);
+
     document.getElementById("mug").addEventListener("click", () => {
         clearTimeout(mugTimer);
         mugTimer = setTimeout(() => mugClicks = 0, 1500);
         if (++mugClicks < 5) return;
         mugClicks = 0;
-        const heraldic = document.getElementById("heraldic");
         const img = heraldic.querySelector("img");
         if (!img.src) img.src = "images/heraldic.png";
         heraldic.hidden = !heraldic.hidden;
+        placeHeraldic();
     });
 
     function imageReady(img) {
