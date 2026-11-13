@@ -17,6 +17,11 @@
     const SITE = "https://gchristensen.github.io/#";
     const RAD = Math.PI / 180;
     const ACCENT = "oklch(80% 0.04 245)";
+    // one colour per program that lives on an exploded layer
+    const TINT = {
+        tabs: "oklch(74% 0.13 250)", torrent: "oklch(76% 0.15 155)", enso: "oklch(86% 0.14 125)",
+        retreat: "oklch(78% 0.12 355)", server: "oklch(78% 0.12 75)"
+    };
 
     const query = new URLSearchParams(location.search);
     for (const key of Object.keys(VIEW))
@@ -113,19 +118,33 @@
 
     function art(id) {
         const g = document.getElementById(id);
-        return `<g transform="${g.getAttribute("transform")}">${g.innerHTML}</g>`;
+        return `<g transform="${g.getAttribute("transform") || ""}">${g.innerHTML}</g>`;
     }
 
     const shadow = (list, blur, fill, opacity) =>
         `<polygon points="${pts(list, raw)}" fill="${fill || "#000"}" opacity="${opacity}" filter="url(#cv-blur${blur})"/>`;
 
-    function monitor(f, artId, layerArt) {
-        const E = VIEW.explode, u = f.dir(1, 0, 0), v = f.dir(0, -1, 0);
-        const at = (x, y, front) => P(f(-150 + x, 263 - y, 8.3 + (front ? E : 0)));
+    // a pane of an exploded layer: tinted glass in the colour of its program, tied to what is behind it
+    function pane(corner, size, c, inner, matrix) {
         let ties = "";
-        for (const [x, y] of [[0, 0], [300, 0], [0, 195], [300, 195]]) {
-            const a = at(x, y), b = at(x, y, true);
+        for (const [x, y] of [[0, 0], [size[0], 0], [0, size[1]], [size[0], size[1]]]) {
+            const a = corner(x, y, false), b = corner(x, y, true);
             ties += `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`;
+        }
+        return `<path class="tie" style="stroke: ${c}" d="${ties}"/>` +
+            `<g transform="${matrix}"><rect width="${size[0]}" height="${size[1]}" fill="${c}" fill-opacity=".08" stroke="${c}" stroke-opacity=".8"/>${inner}</g>`;
+    }
+
+    // panes: [{k, c, html}], nearest last; k is the distance from the screen as a share of VIEW.explode
+    function monitor(f, artId, panes) {
+        const E = VIEW.explode, u = f.dir(1, 0, 0), v = f.dir(0, -1, 0);
+        const at = (x, y, k) => P(f(-150 + x, 263 - y, 8.3 + (k || 0) * E));
+        let layer = "", from = 0;
+        for (const p of panes) {
+            const behind = from;
+            layer += pane((x, y, front) => at(x, y, front ? p.k : behind), [300, 195], p.c, p.html,
+                mat(f(-150, 263, 8.3 + p.k * E), u, v));
+            from = p.k;
         }
         return {
             d: depth(f(0, 160, 0)),
@@ -135,12 +154,25 @@
             s: box(f, [-60, 0, -45], [60, 8, 45], {l: 27}) +
                 box(f, [-16, 8, -17], [16, 120, -5], {l: 25}) +
                 box(f, [-156, 62, -5], [156, 269, 8], {l: 19}) +
+                // the screen is dimmed a little so that the panes in front of it stand out
                 plane(f(-150, 263, 8.3), u, v,
-                    `${art(artId)}<rect width="300" height="195" fill="url(#cv-glare)"/>` +
+                    `${art(artId)}<rect width="300" height="195" fill="#000" opacity=".3"/><rect width="300" height="195" fill="url(#cv-glare)"/>` +
                     `<circle cx="292" cy="198.500" r="1.200" fill="${ACCENT}"/>`),
-            layer: `<path class="tie" d="${ties}"/>` +
-                plane(f(-150, 263, 8.3 + E), u, v, `<rect class="layer" width="300" height="195"/>${art(layerArt)}`)
+            layer
         };
+    }
+
+    // Enso Retreat: pastel stars all over the screen and the break timer
+    function retreatStars() {
+        let seed = 11;
+        const rnd = () => (seed = seed * 16807 % 2147483647) / 2147483647;
+        const colors = ["#7fb2f0", "#f08a9a", "#f5d04e", "#7fd08a", "#b79af0", "#f0a860"];
+        let s = `<text x="8" y="21" fill="#f0453a" style="font: 700 16px var(--sans)">00:50</text>`;
+        for (let i = 0; i < 46; i++) {
+            const x = 8 + rnd() * 284, y = 8 + rnd() * 179, r = 0.45 + rnd() * 0.75, turn = Math.round(rnd() * 72);
+            s += `<use href="#cv-star5" transform="translate(${n1(x)} ${n1(y)}) rotate(${turn}) scale(${n1(r)})" fill="${colors[i % 6]}" fill-opacity=".85"/>`;
+        }
+        return s + `<use href="#cv-star5" transform="translate(117 150) scale(1.200)" fill="#f08a9a" fill-opacity=".9"/>`;
     }
 
     // a beam-forming bar: a row of capsules behind a grille, turned toward the seat
@@ -267,13 +299,8 @@
 
         // exploded layer in front of the server: what runs on it
         const E = 170 + VIEW.explode * 0.6;
-        let ties = "";
-        for (const [x, y] of [[0, 0], [192, 0], [0, 232], [192, 232]]) {
-            const a = P(V(x, y, 170)), b = P(V(x, y, E));
-            ties += `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`;
-        }
-        let layer = `<path class="tie" d="${ties}"/>` +
-            plane(V(0, 232, E), ux, up, `<rect class="layer" width="192" height="232"/><g transform="translate(2 56)">${bucketWheel()}</g>`);
+        let layer = pane((x, y, front) => P(V(x, 232 - y, front ? E : 170)), [192, 232], TINT.server,
+            `<g transform="translate(2 56)">${bucketWheel()}</g>`, mat(V(0, 232, E), ux, up));
         for (let i = 0; i < 3; i++) layer += cyl(V(150, 88 + i * 21, E), 27, 17, {l: 62, c: 0.07, h: 245, o: 0.5});
 
         return {
@@ -314,7 +341,7 @@
             const y = baseY + step * c.r, tx = n1(c.side < 0 ? c.x0 : c.x0 + 14);
             track(c.x0, y - 24);
             track(c.x1, y + 28);
-            out += `<a href="${SITE}${it.hash}"><g class="co">` +
+            out += `<a href="${SITE}${it.hash}"><g class="co"${it.c ? ` style="--c: ${it.c}"` : ""}>` +
                 `<path d="M${n1(c.x0)} ${n1(y)}H${n1(c.x1)}M${n1(c.ax)} ${n1(y)}L${n1(it.t[0])} ${n1(it.t[1])}"/>` +
                 `<circle cx="${n1(it.t[0])}" cy="${n1(it.t[1])}" r="3"/>` +
                 `<text class="act" x="${tx}" y="${n1(y - 8)}">${it.act}</text><text class="nm" x="${tx}" y="${n1(y + 20)}">${it.name}</text></g></a>`;
@@ -328,7 +355,12 @@
         cam = [sy * cp, sp, cy * cp];
         bb = {x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9};
         uid = 0;
-        defs = `<filter id="cv-blur4" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>` +
+        let star = "";
+        for (let i = 0; i < 10; i++) {
+            const r = i % 2 ? 4.4 : 10, a = (i * 36 - 90) * RAD;
+            star += (i ? "L" : "M") + n1(r * Math.cos(a)) + " " + n1(r * Math.sin(a));
+        }
+        defs = `<path id="cv-star5" d="${star}z"/><filter id="cv-blur4" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>` +
             `<filter id="cv-blur14" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>` +
             `<linearGradient id="cv-glare" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".11"/>` +
             `<stop offset=".38" stop-color="#fff" stop-opacity=".02"/><stop offset=".38" stop-color="#fff" stop-opacity="0"/></linearGradient>` +
@@ -345,9 +377,10 @@
 
         const a = VIEW.spread, cx = 600, edge = 158;
         const things = [
-            monitor(frame(cx - edge - 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), a), "cv-browser", "cv-menus"),
-            monitor(frame(cx, TOP, -80, 0), "cv-news", "cv-enso"),
-            monitor(frame(cx + edge + 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), -a), "cv-desktop", "cv-stars"),
+            monitor(frame(cx - edge - 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), a), "cv-browser",
+                [{k: 0.5, c: TINT.torrent, html: art("cv-torrent")}, {k: 1, c: TINT.tabs, html: art("cv-tabs")}]),
+            monitor(frame(cx, TOP, -80, 0), "cv-news", [{k: 1, c: TINT.enso, html: art("cv-enso")}]),
+            monitor(frame(cx + edge + 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), -a), "cv-desktop", [{k: 1, c: TINT.retreat, html: retreatStars()}]),
             micArray(1132, 40)
         ];
         const [m1, m2, m3, mic] = things;
@@ -369,22 +402,22 @@
         const scene = {y0: bb.y0};
         body += layout([
             {t: st.bench, act: "GENERATE IMAGES", name: "Image Bench", hash: "image-bench"},
-            {t: m1.at(54, 70), act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
-            {t: m1.at(165, 42), act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
-            {t: m2.at(190, 72), act: "READ FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
-            {t: m3.at(90, 60), act: "PLAY MUSIC", name: "Silent Night V6 Mod", hash: "silentnight"},
+            {t: m1.at(34, 39), act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
+            {t: m1.at(196, 41), act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
+            {t: m2.at(212, 126), act: "READ FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
+            {t: m3.at(85, 100), act: "PLAY MUSIC", name: "Silent Night V6 Mod", hash: "silentnight"},
             {t: m3.at(262, 14), act: "WATCH PHOTOS", name: "Large Slideshow Gadget", hash: "slideshow"}
         ], scene.y0 - 40, -66, [-1, 1]);
         body += layout([
-            {t: m1.at(44, 80, true), act: "SWITCH TAB GROUPS", name: "Lightning Tab Groups", hash: "lightning-tab-groups"},
-            {t: m1.at(192, 160, true), act: "SEND TORRENTS", name: "Add Torrent To", hash: "torrent-add"},
-            {t: m2.at(86, 63, true), act: "COMMAND YOUR PC", name: "Enso Open-Source", hash: "enso"},
-            {t: m3.at(117, 157, true), act: "TAKE A BREAK", name: "Enso Retreat", hash: "retreat"},
+            {t: m1.at(56, 106, 1), c: TINT.tabs, act: "SWITCH TAB GROUPS", name: "Lightning Tab Groups", hash: "lightning-tab-groups"},
+            {t: m1.at(190, 146, 0.5), c: TINT.torrent, act: "SEND TORRENTS", name: "Add Torrent To", hash: "torrent-add"},
+            {t: m2.at(86, 63, 1), c: TINT.enso, act: "COMMAND YOUR PC", name: "Enso Open-Source", hash: "enso"},
+            {t: m3.at(117, 162, 1), c: TINT.retreat, act: "TAKE A BREAK", name: "Enso Retreat", hash: "retreat"},
             {t: m3.at(278, 146), act: "TRACK DAYLIGHT", name: "Sunlight World Map", hash: "sunlight"},
             {t: mic.target, act: "COMMAND BY VOICE", name: "Scarlett", hash: "scarlett"}
         ], frontY + 62, 66, [1, -1]);
         body += layout([
-            {t: st.xcv, act: "EXTRACT RSS FEEDS", name: "Feedxcavator", hash: "feedxcavator"},
+            {t: st.xcv, c: TINT.server, act: "EXTRACT RSS FEEDS", name: "Feedxcavator", hash: "feedxcavator"},
             {t: st.db, act: "STORE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"}
         ], st.y1 + 46, 66, [-1, 1]);
 
