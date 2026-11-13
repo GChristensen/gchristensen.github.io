@@ -41,16 +41,61 @@
         text-decoration: none;
     }
 
+    /* cover: the whole pane wide, its left and right edges fade out */
+    .cover {
+        margin: 0 auto;
+        max-width: 1800px;
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+        mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+    }
+
+    .cover svg {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .cover .hw { fill: oklch(25% 0.006 265); stroke: oklch(52% 0.008 265); stroke-width: 1.5; }
+    .cover .scr { fill: oklch(13% 0.006 265); }
+    .cover .pane { fill: oklch(19% 0.007 265); }
+    .cover .win { fill: oklch(17% 0.008 265); stroke: oklch(55% 0.008 265); stroke-width: 1; }
+    .cover .b { fill: none; stroke: oklch(100% 0 0 / 0.3); stroke-width: 3; stroke-linecap: round; }
+    .cover .b.dim { stroke: oklch(100% 0 0 / 0.15); }
+    .cover .b.hi { stroke: var(--accent); }
+    .cover .sel { fill: oklch(80% 0.04 245 / 0.22); }
+    .cover .amber { fill: oklch(78% 0.12 75); }
+    .cover .layer { fill: oklch(100% 0 0 / 0.03); stroke: oklch(80% 0.04 245 / 0.45); stroke-dasharray: 5 4; }
+    .cover .tie { fill: none; stroke: oklch(80% 0.04 245 / 0.35); stroke-dasharray: 3 4; }
+    .cover .menu { fill: oklch(21% 0.008 265 / 0.92); stroke: oklch(80% 0.04 245 / 0.7); }
+    .cover .xcv { fill: none; stroke: oklch(78% 0.12 75); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cover .db { fill: oklch(80% 0.04 245 / 0.16); stroke: var(--accent); stroke-width: 1.5; }
+
+    .cover .co path { fill: none; stroke: var(--accent); stroke-width: 1.2; }
+    .cover .co circle { fill: var(--accent-bright); }
+    .cover .act { font: 500 13.5px var(--mono); letter-spacing: 0.05em; fill: var(--accent); }
+    .cover .nm { font: 600 18px var(--sans); fill: var(--on-surface-strong); transition: fill .15s; }
+    .cover a:hover .nm { fill: var(--accent-bright); }
+    .cover a:hover .co path { stroke: var(--accent-bright); }
+
+    /* the heading sits above the cover, in the same column as the catalog */
+    .catalog-top {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 44px 40px 0;
+    }
+
     .catalog {
         max-width: 980px;
         margin: 0 auto;
-        padding: 44px 40px 64px;
+        padding: 28px 40px 64px;
         counter-reset: group;
     }
 
     .catalog-head {
         display: flex;
-        margin-bottom: 36px;
+        margin-bottom: 20px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid var(--rule-section);
     }
 
     .path {
@@ -325,7 +370,8 @@
     }
 </style>
 
-<main class="catalog">
+
+<div class="catalog-top">
     <header class="catalog-head">
         <div class="path">~/software</div>
         <div>
@@ -333,6 +379,180 @@
             <p class="lede">Command lines, browser extensions, web and desktop apps, editors and Windows gadgets.</p>
         </div>
     </header>
+</div>
+
+<figure class="cover">
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+        <linearGradient id="cv-wall" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="oklch(24% 0.05 285)"/>
+            <stop offset="1" stop-color="oklch(15% 0.03 240)"/>
+        </linearGradient>
+        <path id="cv-star" d="M0 -8Q1 -1 8 0Q1 1 0 8Q-1 1 -8 0Q-1 -1 0 -8z"/>
+        <clipPath id="cv-map"><rect x="1232" y="350" width="114" height="62"/></clipPath>
+    <!-- laptop: Image Bench -->
+    <g id="cv-bench" transform="translate(-110 -262)">
+    <rect class="scr" x="110" y="262" width="160" height="98"/>
+    <rect x="116" y="267" width="148" height="11" rx="2" fill="none" stroke="oklch(100% 0 0 / 0.3)"/>
+    <path class="b" d="M122 272.5h70"/>
+    <rect x="246" y="269" width="16" height="7" rx="1.5" fill="var(--accent)"/>
+    <rect x="116" y="284" width="45" height="33" fill="oklch(55% 0.1 30)"/>
+    <rect x="167.500" y="284" width="45" height="33" fill="oklch(55% 0.1 150)"/>
+    <rect x="219" y="284" width="45" height="33" fill="oklch(55% 0.1 250)"/>
+    <rect x="116" y="322" width="45" height="33" fill="oklch(55% 0.1 310)"/>
+    <rect x="167.500" y="322" width="45" height="33" fill="oklch(55% 0.1 90)"/>
+    <rect x="219" y="322" width="45" height="33" fill="none" stroke="oklch(100% 0 0 / 0.35)" stroke-dasharray="3 3"/>
+    <path d="M116 317l14 -16l10 10l6 -5l15 11zM167.500 317l16 -13l12 8l8 -6l9 11z" fill="oklch(100% 0 0 / 0.25)"/>
+    <circle cx="150" cy="292" r="4" fill="oklch(100% 0 0 / 0.45)"/>
+    <path class="b hi" d="M225 345h18"/><path class="b dim" d="M246 345h12"/>
+    </g>
+
+    <!-- left monitor: browser with the Scrapyard sidebar, iShell and a page of links -->
+    <g id="cv-browser" transform="translate(-420 -230)">
+    <rect class="scr" x="420" y="230" width="300" height="195"/>
+    <rect x="420" y="230" width="300" height="12" fill="oklch(20% 0.007 265)"/>
+    <rect x="424" y="232" width="52" height="10" fill="oklch(28% 0.007 265)"/>
+    <path class="b dim" d="M430 237h30M486 237h28M530 237h28"/>
+    <rect x="420" y="242" width="300" height="14" fill="oklch(28% 0.007 265)"/>
+    <rect x="470" y="245" width="190" height="8" rx="4" fill="oklch(16% 0.006 265)"/>
+    <path d="M426 246h6v6h-6zM438 246h6v6h-6zM668 246h6v6h-6zM680 246h6v6h-6zM692 246h6v6h-6zM704 246h6v6h-6z" fill="oklch(100% 0 0 / 0.3)"/>
+    <rect class="pane" x="420" y="256" width="72" height="169"/>
+    <path d="M427 262h9v12l-4.500 -3.500l-4.500 3.500z" fill="var(--accent)"/>
+    <path class="b" d="M442 268h40"/>
+    <path d="M426 284h6v5h-6zM426 310h6v5h-6zM434 336h6v5h-6zM426 375h6v5h-6zM434 388h6v5h-6z" class="amber"/>
+    <path class="b dim" d="M437 286.500h36M445 299.500h34M445 312.500h30M445 325.500h38M445 338.500h26M453 351.500h28M453 364.500h22M437 377.500h40M445 390.500h30M453 403.500h26M453 416h20"/>
+    <path class="b" d="M606 268h60"/>
+    <path class="b hi" d="M612 284h84M612 298h64M612 312h92M612 326h72M612 340h88M612 354h58M612 368h80M612 382h96M612 396h66M612 410h76" stroke-width="2.5"/>
+    <path d="M604 284h.01M604 298h.01M604 312h.01M604 326h.01M604 340h.01M604 354h.01M604 368h.01M604 382h.01M604 396h.01M604 410h.01" class="b"/>
+    <rect class="win" x="500" y="266" width="100" height="74" rx="2"/>
+    <rect x="504" y="270" width="92" height="13" fill="oklch(8% 0.005 265)"/>
+    <path class="b" d="M509 276.500h40" stroke="oklch(92% 0.03 245)"/>
+    <path d="M554 272v9" stroke="oklch(92% 0.03 245)" stroke-width="1.5"/>
+    <rect class="sel" x="504" y="287" width="92" height="12"/>
+    <path d="M508 290h6v6h-6zM508 303h6v6h-6zM508 316h6v6h-6zM508 329h6v6h-6z" fill="oklch(100% 0 0 / 0.35)"/>
+    <path class="b" d="M520 293h60"/><path class="b dim" d="M520 306h48M520 319h64M520 332h40"/>
+    </g>
+
+    <!-- center monitor: NewsBlurMod, feed tree and headlines -->
+    <g id="cv-news" transform="translate(-740 -230)">
+    <rect class="scr" x="740" y="230" width="300" height="195"/>
+    <rect x="740" y="230" width="300" height="12" fill="oklch(26% 0.007 265)"/>
+    <circle cx="748" cy="236" r="3.500" class="amber"/>
+    <path class="b dim" d="M756 236h44M980 236h50"/>
+    <rect class="pane" x="740" y="242" width="88" height="183"/>
+    <path d="M745 249l6 0l-3 5zM745 301l6 0l-3 5zM745 366l6 0l-3 5z" fill="oklch(100% 0 0 / 0.45)"/>
+    <path class="b" d="M756 251.500h40M756 303.500h34M756 368.500h44"/>
+    <g>
+        <circle cx="755" cy="264.500" r="3" fill="oklch(65% 0.14 30)"/><circle cx="755" cy="277.500" r="3" fill="oklch(65% 0.14 250)"/><circle cx="755" cy="290.500" r="3" fill="oklch(65% 0.14 140)"/>
+        <circle cx="755" cy="316.500" r="3" fill="oklch(65% 0.14 80)"/><circle cx="755" cy="329.500" r="3" fill="oklch(65% 0.14 320)"/><circle cx="755" cy="342.500" r="3" fill="oklch(65% 0.14 200)"/><circle cx="755" cy="355.500" r="3" fill="oklch(65% 0.14 30)"/>
+        <circle cx="755" cy="381.500" r="3" fill="oklch(65% 0.14 280)"/><circle cx="755" cy="394.500" r="3" fill="oklch(65% 0.14 110)"/><circle cx="755" cy="407.500" r="3" fill="oklch(65% 0.14 50)"/>
+    </g>
+    <path class="b dim" d="M763 264.500h34M763 277.500h28M763 290.500h38M763 316.500h30M763 329.500h36M763 342.500h24M763 355.500h32M763 381.500h36M763 394.500h26M763 407.500h32"/>
+    <path d="M810 264.500h10M810 290.500h10M810 329.500h10M810 381.500h10" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>
+    <rect class="sel" x="828" y="287" width="212" height="15"/>
+    <g>
+        <circle cx="837" cy="249.500" r="3" fill="oklch(65% 0.14 30)"/><circle cx="837" cy="264.500" r="3" fill="oklch(65% 0.14 30)"/><circle cx="837" cy="279.500" r="3" fill="oklch(65% 0.14 250)"/><circle cx="837" cy="294.500" r="3" fill="oklch(65% 0.14 140)"/>
+        <circle cx="837" cy="309.500" r="3" fill="oklch(65% 0.14 140)"/><circle cx="837" cy="324.500" r="3" fill="oklch(65% 0.14 320)"/><circle cx="837" cy="339.500" r="3" fill="oklch(65% 0.14 80)"/><circle cx="837" cy="354.500" r="3" fill="oklch(65% 0.14 200)"/>
+        <circle cx="837" cy="369.500" r="3" fill="oklch(65% 0.14 30)"/><circle cx="837" cy="384.500" r="3" fill="oklch(65% 0.14 280)"/><circle cx="837" cy="399.500" r="3" fill="oklch(65% 0.14 110)"/><circle cx="837" cy="414.500" r="3" fill="oklch(65% 0.14 50)"/>
+    </g>
+    <path class="b" d="M846 249.500h128M846 264.500h104M846 279.500h142M846 294.500h118M846 309.500h96M846 324.500h136"/>
+    <path class="b dim" d="M846 339.500h110M846 354.500h146M846 369.500h92M846 384.500h124M846 399.500h138M846 414.500h100"/>
+    <path class="b dim" d="M1012 249.500h20M1012 264.500h20M1012 279.500h20M1012 294.500h20M1012 309.500h20M1012 324.500h20M1012 339.500h20M1012 354.500h20M1012 369.500h20M1012 384.500h20M1012 399.500h20M1012 414.500h20" stroke-width="2"/>
+    </g>
+
+    <!-- right monitor: desktop with foobar2000 in Silent Night, the slideshow gadget and the sunlight map -->
+    <g id="cv-desktop" transform="translate(-1060 -230)">
+    <rect x="1060" y="230" width="300" height="195" fill="url(#cv-wall)"/>
+    <rect x="1060" y="416" width="300" height="9" fill="oklch(12% 0.01 265 / 0.85)"/>
+    <path d="M1064 418h5v5h-5zM1076 418h5v5h-5zM1086 418h5v5h-5z" fill="oklch(100% 0 0 / 0.35)"/>
+    <rect class="win" x="1068" y="262" width="154" height="148"/>
+    <rect x="1068" y="262" width="154" height="9" fill="oklch(24% 0.008 265)"/>
+    <rect x="1073" y="276" width="20" height="20" fill="oklch(50% 0.09 20)"/>
+    <rect x="1073" y="301" width="20" height="20" fill="oklch(50% 0.09 230)"/>
+    <rect x="1073" y="326" width="20" height="20" fill="oklch(50% 0.09 130)"/>
+    <rect x="1073" y="351" width="20" height="20" fill="oklch(50% 0.09 300)"/>
+    <rect x="1073" y="376" width="20" height="17" fill="oklch(50% 0.09 70)"/>
+    <path class="b" d="M1100 279h50M1100 304h42M1100 329h56M1100 354h38M1100 379h48" stroke-width="2.500"/>
+    <path class="b dim" d="M1100 287h36M1100 312h46M1100 337h30M1100 362h44M1100 387h34" stroke-width="2"/>
+    <rect x="1170" y="271" width="52" height="124" fill="oklch(22% 0.008 265)"/>
+    <path d="M1176 278v108M1176 284h6M1176 296h6M1176 308h6M1176 320h6M1176 332h6M1176 344h6M1176 356h6M1176 368h6M1176 380h6" fill="none" stroke="oklch(100% 0 0 / 0.3)"/>
+    <path class="b dim" d="M1186 284h26M1186 296h20M1186 308h28M1186 320h18M1186 344h24M1186 356h20M1186 368h26M1186 380h16" stroke-width="2"/>
+    <path class="b hi" d="M1186 332h28" stroke-width="2"/>
+    <rect x="1068" y="396" width="154" height="14" fill="oklch(12% 0.006 265)"/>
+    <path d="M1075 399v8l7 -4z" fill="var(--accent-bright)"/>
+    <path class="b dim" d="M1090 403h124" stroke-width="2"/><path class="b hi" d="M1090 403h46" stroke-width="2"/>
+    <circle cx="1136" cy="403" r="3" fill="var(--accent-bright)"/>
+    <!-- slideshow gadget -->
+    <rect x="1232" y="238" width="114" height="102" fill="oklch(6% 0 0)" stroke="oklch(45% 0.008 265)"/>
+    <rect x="1252" y="246" width="74" height="86" fill="oklch(84% 0.004 265)"/>
+    <path d="M1287 290L1268 262M1291 288L1281 254M1295 287L1296 252M1299 288L1311 256M1303 291L1321 266M1283 293L1260 276" stroke="oklch(50% 0.2 290)" stroke-width="1.3" fill="none"/>
+    <path d="M1268 262h.01M1281 254h.01M1296 252h.01M1311 256h.01M1321 266h.01M1260 276h.01" stroke="oklch(40% 0.2 290)" stroke-width="3.500" stroke-linecap="round"/>
+    <path d="M1319 332C1320 302 1304 286 1288 290C1273 294 1272 313 1285 315C1295 316 1298 305 1291 302" fill="none" stroke="oklch(50% 0.13 145)" stroke-width="3.500" stroke-linecap="round"/>
+    <path d="M1288 290l-3 -6M1280 294l-6 -3M1276 302l-7 1M1278 311l-6 4M1285 315l-1 7" stroke="oklch(35% 0.08 145)" stroke-width="2" stroke-linecap="round"/>
+    <!-- sunlight world map -->
+    <rect x="1232" y="350" width="114" height="62" fill="oklch(42% 0.07 240)"/>
+    <g clip-path="url(#cv-map)">
+        <path d="M1240 362l16 -4l9 4l-4 9l-7 3l-2 7l-6 -7zM1262 385l8 2l2 8l-5 11l-4 -9zM1284 361l20 -4l26 2l9 7l-6 9l-11 2l-6 7l-7 -7l-12 -2l-11 -5zM1287 378l11 0l4 9l-5 13l-5 -7l-6 -8zM1323 394l10 -1l2 7l-10 2z" fill="oklch(66% 0.1 140)"/>
+        <path d="M1232 350H1346V374C1318 356 1296 398 1264 382C1250 375 1240 380 1232 388z" fill="oklch(10% 0.02 265 / 0.6)"/>
+        <circle cx="1304" cy="400" r="3.500" fill="oklch(90% 0.15 95)"/>
+    </g>
+    <rect x="1232" y="350" width="114" height="62" fill="none" stroke="oklch(45% 0.008 265)"/>
+    </g>
+
+    <!-- Lightning Tab Groups menu -->
+    <g id="cv-menus" transform="translate(-364 -290)">
+    <rect class="menu" x="370" y="296" width="76" height="76" rx="3"/>
+    <rect class="sel" x="372" y="324" width="72" height="13"/>
+    <path d="M379 305.500h.01M379 318.500h.01M379 330.500h.01M379 343.500h.01M379 356.500h.01" stroke-width="6" stroke-linecap="round" stroke="oklch(70% 0.13 250)"/>
+    <path d="M379 318.500h.01" stroke-width="6" stroke-linecap="round" stroke="oklch(70% 0.13 30)"/>
+    <path d="M379 343.500h.01" stroke-width="6" stroke-linecap="round" stroke="oklch(70% 0.13 140)"/>
+    <path d="M379 356.500h.01" stroke-width="6" stroke-linecap="round" stroke="oklch(70% 0.13 320)"/>
+    <path class="b" d="M388 305.500h30M388 318.500h38M388 330.500h26M388 343.500h42M388 356.500h32"/>
+    <path d="M438 299l-5 8h4l-2 7l6 -9h-4z" class="amber"/>
+
+    <!-- Add Torrent To context menu -->
+    <rect class="menu" x="500" y="370" width="100" height="80" rx="2"/>
+    <rect class="sel" x="502" y="407" width="96" height="14"/>
+    <path class="b dim" d="M508 380h60M508 394h72M508 428h54M508 441h66"/>
+    <path class="b" d="M520 414h58"/>
+    <path d="M511 409v8M507.500 414l3.500 4l3.500 -4" fill="none" stroke="var(--accent-bright)" stroke-width="1.5"/>
+    <path d="M591 411l4 3l-4 3z" fill="oklch(100% 0 0 / 0.5)"/>
+    <rect class="menu" x="600" y="404" width="56" height="32" rx="2"/>
+    <path class="b" d="M607 413h36M607 427h42"/>
+    </g>
+
+    <!-- Enso command line -->
+    <g id="cv-enso" transform="translate(-684 -290)">
+    <rect x="690" y="296" width="158" height="17" fill="oklch(0% 0 0 / 0.72)"/>
+    <text x="696" y="308.500" style="font: 10px var(--sans)" fill="oklch(85% 0.12 125)">Opens a program or a file</text>
+    <rect x="690" y="313" width="216" height="40" fill="oklch(0% 0 0 / 0.72)"/>
+    <path d="M700 329v8M706 324v18M712 328v10M718 321v24M724 330v6" stroke="var(--accent-bright)" stroke-width="2.500" stroke-linecap="round"/>
+    <text x="736" y="342" style="font: 26px var(--sans)" fill="oklch(85% 0.15 125)">open <tspan fill="oklch(97% 0 0)">notepad</tspan></text>
+    </g>
+
+    <!-- Enso Retreat stars -->
+    <g id="cv-stars" transform="translate(-1004 -290)">
+    <g fill="oklch(93% 0.08 95)" opacity="0.92">
+        <use href="#cv-star" transform="translate(1040 322) scale(1.2)"/>
+        <use href="#cv-star" transform="translate(1092 378) scale(.7)"/>
+        <use href="#cv-star" transform="translate(1120 436) scale(1.4)"/>
+        <use href="#cv-star" transform="translate(1172 330) scale(.8)"/>
+        <use href="#cv-star" transform="translate(1200 412)"/>
+        <use href="#cv-star" transform="translate(1242 352) scale(1.5)"/>
+        <use href="#cv-star" transform="translate(1272 452) scale(.8)"/>
+        <use href="#cv-star" transform="translate(1058 452) scale(.9)"/>
+        <use href="#cv-star" transform="translate(1150 388) scale(.5)"/>
+        <use href="#cv-star" transform="translate(1282 312) scale(.7)"/>
+        <use href="#cv-star" transform="translate(1216 466) scale(.6)"/>
+    </g>
+    </g>
+
+    </defs>
+</svg>
+<div id="cover-view"></div>
+</figure>
+
+<main class="catalog">
 
     <section class="group" id="cli">
         <div class="group-label"><h2>Command Interfaces</h2></div>
@@ -529,6 +749,7 @@
     </section>
 </main>
 
+<script src="../js/overview-cover.js"></script>
 <script src="../js/retro-scrollbar.js"></script>
 <script>
     if (window.parent !== window)
@@ -536,11 +757,12 @@
 
     retroScrollbar(document.scrollingElement);
 
-    document.querySelector(".catalog").addEventListener("click", (e) => {
-        const link = e.target.closest(".item");
+    // catalog rows and cover callouts both select their entry in the shell
+    document.addEventListener("click", (e) => {
+        const link = e.target.closest(".item, .cover a");
         if (!link) return;
         e.preventDefault();
-        const hash = link.href.split("#")[1];
+        const hash = link.getAttribute("href").split("#")[1];
         if (hash) window.parent.postMessage({type: "select", hash}, "*");
     });
 
