@@ -127,14 +127,17 @@
     const shadow = (list, blur, fill, opacity) =>
         `<polygon points="${pts(list, raw)}" fill="${fill || "#000"}" opacity="${opacity}" filter="url(#cv-blur${blur})"/>`;
 
-    const tieLines = (pairs, c) =>
-        `<path class="tie" style="stroke: ${c}" d="${pairs.map(([a, b]) => `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`).join("")}"/>`;
+    const tieLines = (pairs, c) => {
+        const d = pairs.map(([a, b]) => `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`).join("");
+        return `<path class="tie case" d="${d}"/><path class="tie" style="stroke: ${c}" d="${d}"/>`;
+    };
 
     // Each layered program is pulled off its screen and floats upright far in front of it, every pane at
     // its own distance so that they overlap as little as possible. A tinted outline stays on the screen
     // where the item belongs, and dashed lines tie its corners to the pane.
     // panes: [{c, r: [x, y, w, h] the place on the screen, d: distance, dx: sideways shift, s: scale,
-    //          ghost: false leaves no outline on the screen, html}]
+    //          ghost: false leaves no outline on the screen,
+    //          lead: [[x, y] on the screen, [x, y] on the pane] draws one solid leader instead of the ties, html}]
     function monitor(f, artId, panes) {
         const u = f.dir(1, 0, 0), v = f.dir(0, -1, 0);
         const at = (x, y) => P(f(-150 + x, 263 - y, 8.3));
@@ -146,11 +149,18 @@
             if (p.ghost !== false) ghosts += `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="${p.c}" fill-opacity=".12" stroke="${p.c}" stroke-width="1.300"/>`;
             const ties = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([i, j]) => [at(rx + i * rw, ry + j * rh), P(corner(i * w, j * h))]);
             low = Math.max(low, ties[2][1][1], ties[3][1][1]);
-            layer += tieLines(ties, p.c) +
+            let lead = "";
+            if (p.lead) {   // one solid leader from a spot on the screen to a spot on the pane instead of the corner ties
+                const a = at(...p.lead[0]), b = P(corner((p.lead[1][0] - rx) * s, (p.lead[1][1] - ry) * s));
+                const d = `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`;
+                lead = `<g class="link lead" style="--c: ${p.c}"><path class="case" d="${d}"/><path d="${d}"/>` +
+                    `<circle cx="${n1(a[0])}" cy="${n1(a[1])}" r="2.600"/><circle cx="${n1(b[0])}" cy="${n1(b[1])}" r="2.600"/></g>`;
+            }
+            layer += (p.lead ? "" : tieLines(ties, p.c)) +
                 `<g transform="${mat(corner(0, 0), u.map(q => q * s), v.map(q => q * s))}">` +
                 `<rect width="${rw}" height="${rh}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n1(3.4 / s)}"/>` +
                 `<rect width="${rw}" height="${rh}" fill="${p.c}" fill-opacity=".1" stroke="${p.c}" stroke-width="${n1(1.4 / s)}"/>` +
-                `<g transform="translate(${-rx} ${-ry})">${p.html}</g></g>`;
+                `<g transform="translate(${-rx} ${-ry})">${p.html}</g></g>` + lead;
             return (x, y) => P(corner((x - rx) * s, (y - ry) * s));
         });
         return {
@@ -418,8 +428,8 @@
         const a = VIEW.spread, cx = 600, edge = 158;
         const things = [
             monitor(frame(cx - edge - 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), a), "cv-browser",
-                [{c: TINT.tabs, r: [0, 12, 114, 100], d: 560, s: 1.25, html: art("cv-tabs")},
-                    {c: TINT.torrent, r: [144, 80, 150, 110], d: 400, html: art("cv-torrent")}]),
+                [{c: TINT.tabs, r: [0, 12, 114, 100], d: 560, s: 1.25, ghost: false, lead: [[9, 20.5], [9, 12]], html: art("cv-tabs")},
+                    {c: TINT.torrent, r: [144, 80, 150, 110], d: 400, ghost: false, lead: [[256, 20.5], [256, 80]], html: art("cv-torrent")}]),
             monitor(frame(cx, TOP, -80, 0), "cv-news", [{c: TINT.enso, r: [0, 0, 198, 70], d: 45, ghost: false, html: art("cv-enso")}]),
             monitor(frame(cx + edge + 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), -a), "cv-desktop", 
                 [{c: TINT.retreat, r: [0, 0, 300, 195], d: 45, ghost: false, html: retreatStars()}]),
@@ -451,7 +461,7 @@
             {t: st.bench, c: TINT.bench, act: "GENERATE IMAGES", name: "Image Bench", hash: "image-bench"},
             {t: m1.at(66, 38), c: TINT.scrapyard, act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
             {t: m1.at(196, 41), c: TINT.ishell, act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
-            {t: m2.at(212, 126), c: TINT.news, act: "READ FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
+            {t: m2.at(212, 126), c: TINT.news, act: "READ RSS FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
             {t: m2.far[0](146, 34), c: TINT.emacs, act: "USE ORG MODE", name: "&#961;Emacs", hash: "rho"},
             {t: m3.at(85, 100), c: TINT.silent, act: "PLAY MUSIC FROM FS", name: "Silent Night V6 Mod", hash: "silentnight"},
             {t: m3.at(262, 14), c: TINT.slideshow, act: "WATCH PHOTOS", name: "Large Slideshow Gadget", hash: "slideshow"}

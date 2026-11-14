@@ -64,7 +64,8 @@
     .cover .b.hi { stroke: var(--accent); }
     .cover .sel { fill: oklch(80% 0.04 245 / 0.22); }
     .cover .amber { fill: oklch(78% 0.12 75); }
-        .cover .tie { fill: none; stroke-opacity: 0.55; stroke-dasharray: 3 4; }
+        .cover .tie { fill: none; stroke-width: 1.5; stroke-opacity: 0.95; stroke-dasharray: 5 4; }
+        .cover .tie.case { stroke: #000; stroke-opacity: 0.45; stroke-width: 3.4; stroke-dasharray: none; }
     .cover .menu { fill: oklch(21% 0.008 265 / 0.92); stroke: oklch(80% 0.04 245 / 0.7); }
     .cover .xcv { fill: none; stroke: oklch(78% 0.12 75); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .cover .db { fill: oklch(80% 0.04 245 / 0.16); stroke: var(--accent); stroke-width: 1.5; }
@@ -73,6 +74,7 @@
     .cover .co path { fill: none; stroke: var(--c, var(--accent)); stroke-width: 1.2; }
     .cover .link path { fill: none; stroke: var(--c); stroke-width: 1.6; stroke-dasharray: 7 5; }
     .cover .link path.case { stroke: #000; stroke-opacity: 0.5; stroke-width: 4.2; stroke-dasharray: none; }
+    .cover .link.lead path:not(.case) { stroke-dasharray: none; stroke-width: 1.4; }
     .cover .link circle { fill: var(--c); stroke: oklch(10% 0 0 / 0.7); stroke-width: 1.2; }
     .cover .co path.case { stroke: #000; stroke-opacity: 0.55; stroke-width: 3.8; }
     .cover .co circle { fill: var(--c, var(--accent-bright)); stroke: oklch(10% 0 0 / 0.7); stroke-width: 1.2; }
