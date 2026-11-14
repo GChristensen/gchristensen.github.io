@@ -11,16 +11,19 @@
         yaw: 22,      // degrees; positive looks from the right, negative from the left
         pitch: 20,    // degrees above the horizon
         spread: 14,   // how far the side monitors turn inward
-        explode: 130  // distance of the exploded layers from the screens
+        explode: 1    // scales how far the panes float in front of the screens
     };
 
     const SITE = "https://gchristensen.github.io/#";
     const RAD = Math.PI / 180;
     const ACCENT = "oklch(80% 0.04 245)";
-    // one colour per program that lives on an exploded layer
+    // one colour per program: its callout, and its pane if it has one
     const TINT = {
         tabs: "oklch(74% 0.13 250)", torrent: "oklch(76% 0.15 155)", enso: "oklch(86% 0.14 125)",
-        retreat: "oklch(78% 0.12 355)", server: "oklch(78% 0.12 75)"
+        retreat: "oklch(78% 0.12 355)", emacs: "oklch(74% 0.13 305)", server: "oklch(86% 0.14 95)",
+        bench: "oklch(76% 0.11 205)", scrapyard: "oklch(74% 0.15 55)", ishell: "oklch(80% 0.11 180)",
+        news: "oklch(80% 0.13 75)", silent: "oklch(72% 0.13 280)", slideshow: "oklch(74% 0.16 335)",
+        sunlight: "oklch(90% 0.06 215)", scarlett: "oklch(68% 0.19 25)"
     };
 
     const query = new URLSearchParams(location.search);
@@ -124,39 +127,42 @@
     const shadow = (list, blur, fill, opacity) =>
         `<polygon points="${pts(list, raw)}" fill="${fill || "#000"}" opacity="${opacity}" filter="url(#cv-blur${blur})"/>`;
 
-    // a pane of an exploded layer: tinted glass in the colour of its program, tied to what is behind it
-    function pane(corner, size, c, inner, matrix) {
-        let ties = "";
-        for (const [x, y] of [[0, 0], [size[0], 0], [0, size[1]], [size[0], size[1]]]) {
-            const a = corner(x, y, false), b = corner(x, y, true);
-            ties += `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`;
-        }
-        return `<path class="tie" style="stroke: ${c}" d="${ties}"/>` +
-            `<g transform="${matrix}"><rect width="${size[0]}" height="${size[1]}" fill="${c}" fill-opacity=".08" stroke="${c}" stroke-opacity=".8"/>${inner}</g>`;
-    }
+    const tieLines = (pairs, c) =>
+        `<path class="tie" style="stroke: ${c}" d="${pairs.map(([a, b]) => `M${n1(a[0])} ${n1(a[1])}L${n1(b[0])} ${n1(b[1])}`).join("")}"/>`;
 
-    // panes: [{k, c, html}], nearest last; k is the distance from the screen as a share of VIEW.explode
+    // Each layered program is pulled off its screen and floats upright far in front of it, every pane at
+    // its own distance so that they overlap as little as possible. A tinted outline stays on the screen
+    // where the item belongs, and dashed lines tie its corners to the pane.
+    // panes: [{c, r: [x, y, w, h] the place on the screen, d: distance, dx: sideways shift, s: scale,
+    //          ghost: false leaves no outline on the screen, html}]
     function monitor(f, artId, panes) {
-        const E = VIEW.explode, u = f.dir(1, 0, 0), v = f.dir(0, -1, 0);
-        const at = (x, y, k) => P(f(-150 + x, 263 - y, 8.3 + (k || 0) * E));
-        let layer = "", from = 0;
-        for (const p of panes) {
-            const behind = from;
-            layer += pane((x, y, front) => at(x, y, front ? p.k : behind), [300, 195], p.c, p.html,
-                mat(f(-150, 263, 8.3 + p.k * E), u, v));
-            from = p.k;
-        }
+        const u = f.dir(1, 0, 0), v = f.dir(0, -1, 0);
+        const at = (x, y) => P(f(-150 + x, 263 - y, 8.3));
+        let layer = "", ghosts = "", low = -1e9;
+        const far = panes.map(p => {
+            const [rx, ry, rw, rh] = p.r, s = p.s || 1, w = rw * s, h = rh * s;
+            const x0 = -150 + rx + rw / 2 - w / 2 + (p.dx || 0), y0 = 263 - ry - rh / 2 + h / 2;
+            const corner = (x, y) => f(x0 + x, y0 - y, 8.3 + p.d * VIEW.explode);
+            if (p.ghost !== false) ghosts += `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="${p.c}" fill-opacity=".12" stroke="${p.c}" stroke-width="1.300"/>`;
+            const ties = [[0, 0], [1, 0], [0, 1], [1, 1]].map(([i, j]) => [at(rx + i * rw, ry + j * rh), P(corner(i * w, j * h))]);
+            low = Math.max(low, ties[2][1][1], ties[3][1][1]);
+            layer += tieLines(ties, p.c) +
+                `<g transform="${mat(corner(0, 0), u.map(q => q * s), v.map(q => q * s))}">` +
+                `<rect width="${rw}" height="${rh}" fill="none" stroke="#000" stroke-opacity=".55" stroke-width="${n1(3.4 / s)}"/>` +
+                `<rect width="${rw}" height="${rh}" fill="${p.c}" fill-opacity=".1" stroke="${p.c}" stroke-width="${n1(1.4 / s)}"/>` +
+                `<g transform="translate(${-rx} ${-ry})">${p.html}</g></g>`;
+            return (x, y) => P(corner((x - rx) * s, (y - ry) * s));
+        });
         return {
             d: depth(f(0, 160, 0)),
-            at,
+            at, far, low,
             under: shadow([f(-64, 0.2, -50), f(68, 0.2, -50), f(68, 0.2, 46), f(-64, 0.2, 46)], 4, "#000", 0.5) +
                 shadow([f(-150, 0.2, 14), f(150, 0.2, 14), f(175, 0.2, 150), f(-175, 0.2, 150)], 14, ACCENT, 0.09),
             s: box(f, [-60, 0, -45], [60, 8, 45], {l: 27}) +
                 box(f, [-16, 8, -17], [16, 120, -5], {l: 25}) +
                 box(f, [-156, 62, -5], [156, 269, 8], {l: 19}) +
-                // the screen is dimmed a little so that the panes in front of it stand out
                 plane(f(-150, 263, 8.3), u, v,
-                    `${art(artId)}<rect width="300" height="195" fill="#000" opacity=".3"/><rect width="300" height="195" fill="url(#cv-glare)"/>` +
+                    `${art(artId)}${ghosts}<rect width="300" height="195" fill="url(#cv-glare)"/>` +
                     `<circle cx="292" cy="198.500" r="1.200" fill="${ACCENT}"/>`),
             layer
         };
@@ -297,16 +303,21 @@
             `<rect width="180" height="${lid}" rx="4" fill="oklch(19% 0.006 265)" stroke="oklch(46% 0.008 265)"/>` +
             `<g transform="translate(10 8)">${art("cv-bench")}<rect width="160" height="98" fill="url(#cv-glare)"/></g>`);
 
-        // exploded layer in front of the server: what runs on it
-        const E = 170 + VIEW.explode * 0.6;
-        let layer = pane((x, y, front) => P(V(x, 232 - y, front ? E : 170)), [192, 232], TINT.server,
-            `<g transform="translate(2 56)">${bucketWheel()}</g>`, mat(V(0, 232, E), ux, up));
-        for (let i = 0; i < 3; i++) layer += cyl(V(150, 88 + i * 21, E), 27, 17, {l: 62, c: 0.07, h: 245, o: 0.5});
+        // what runs on the server floats in front of the stand, tied to an outline of the server's front
+        const E = 170 + 78 * VIEW.explode, c = TINT.server, PH = 232, PY = 0;   // pane height and how high it floats
+        const near = [V(0, 232, 170), V(192, 232, 170), V(0, 0, 170), V(192, 0, 170)].map(P);
+        const away = [V(0, PY + PH, E), V(192, PY + PH, E), V(0, PY, E), V(192, PY, E)].map(P);
+        let layer = `<polygon points="${pts([V(0, 0, 170), V(192, 0, 170), V(192, 232, 170), V(0, 232, 170)])}" fill="${c}" fill-opacity=".06" stroke="${c}" stroke-width="1.300"/>` +
+            tieLines(near.map((p, i) => [p, away[i]]), c) +
+            plane(V(0, PY + PH, E), ux, up,
+                `<rect width="192" height="${PH}" fill="${c}" fill-opacity=".1" stroke="${c}" stroke-opacity=".85" stroke-width="1.200"/>` +
+                `<g transform="translate(2 56)">${bucketWheel()}</g>`);
+        for (let i = 0; i < 3; i++) layer += cyl(V(150, 88 + i * 21, E), 27, 17, {l: 62, c: 0.07, h: 245, o: 0.6});
 
         return {
             d: depth(S(0, 170, 0)), s, layer,
-            db: P(V(150, 90, E + 27)), xcv: P(V(54, 84, E)), bench: P(lidAt(145, 21)),
-            y1: Math.max(P(S(-120, 0, 110))[1], P(S(120, 0, 110))[1]),
+            db: P(V(150, 90, E + 27)), dbTop: P(V(150, 147, E)), xcv: P(V(54, 84, E)), bench: P(lidAt(145, 21)),
+            y1: Math.max(P(S(-120, 0, 110))[1], P(S(120, 0, 110))[1], away[2][1], away[3][1]),
             under: shadow([S(-110, 0, -140), S(160, 0, -140), S(160, 0, 100), S(-110, 0, 100)], 14, "#000", 0.5)
         };
     }
@@ -342,8 +353,9 @@
             track(c.x0, y - 24);
             track(c.x1, y + 28);
             out += `<a href="${SITE}${it.hash}"><g class="co"${it.c ? ` style="--c: ${it.c}"` : ""}>` +
+                `<path class="case" d="M${n1(c.ax)} ${n1(y)}L${n1(it.t[0])} ${n1(it.t[1])}"/>` +
                 `<path d="M${n1(c.x0)} ${n1(y)}H${n1(c.x1)}M${n1(c.ax)} ${n1(y)}L${n1(it.t[0])} ${n1(it.t[1])}"/>` +
-                `<circle cx="${n1(it.t[0])}" cy="${n1(it.t[1])}" r="3"/>` +
+                `<circle cx="${n1(it.t[0])}" cy="${n1(it.t[1])}" r="3.200"/>` +
                 `<text class="act" x="${tx}" y="${n1(y - 8)}">${it.act}</text><text class="nm" x="${tx}" y="${n1(y + 20)}">${it.name}</text></g></a>`;
         }
         return out;
@@ -378,9 +390,11 @@
         const a = VIEW.spread, cx = 600, edge = 158;
         const things = [
             monitor(frame(cx - edge - 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), a), "cv-browser",
-                [{k: 0.5, c: TINT.torrent, html: art("cv-torrent")}, {k: 1, c: TINT.tabs, html: art("cv-tabs")}]),
-            monitor(frame(cx, TOP, -80, 0), "cv-news", [{k: 1, c: TINT.enso, html: art("cv-enso")}]),
-            monitor(frame(cx + edge + 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), -a), "cv-desktop", [{k: 1, c: TINT.retreat, html: retreatStars()}]),
+                [{c: TINT.tabs, r: [0, 12, 114, 100], d: 560, s: 1.25, html: art("cv-tabs")},
+                    {c: TINT.torrent, r: [144, 80, 150, 110], d: 400, html: art("cv-torrent")}]),
+            monitor(frame(cx, TOP, -80, 0), "cv-news", [{c: TINT.enso, r: [0, 0, 198, 70], d: 45, ghost: false, html: art("cv-enso")}]),
+            monitor(frame(cx + edge + 156 * Math.cos(a * RAD), TOP, -80 + 156 * Math.sin(a * RAD), -a), "cv-desktop", 
+                [{c: TINT.retreat, r: [0, 0, 300, 195], d: 45, ghost: false, html: retreatStars()}]),
             micArray(1132, 40)
         ];
         const [m1, m2, m3, mic] = things;
@@ -397,28 +411,34 @@
         const floor = `<g transform="matrix(${raw([1, 0, 0]).concat(raw([0, 0, 1]), raw([-700, 0, -520])).map(x => +x.toFixed(4)).join(" ")})">` +
             `<rect width="2300" height="1040" fill="url(#cv-floor)"/></g>`;
 
-        let body = floor + st.under + (st.d < tableDepth ? st.s + table : table + st.s) + st.layer + m1.layer + m2.layer + m3.layer;
+        // the bookmark tree in the browser and the storage on the server are the same Scrapyard
+        const tree = m1.at(46, 134), mid = [(tree[0] + st.dbTop[0]) / 2, (tree[1] + st.dbTop[1]) / 2 + 46];
+        const link = `M${n1(tree[0])} ${n1(tree[1])}Q${n1(mid[0])} ${n1(mid[1])} ${n1(st.dbTop[0])} ${n1(st.dbTop[1])}`;
+        const linked = `<g class="link" style="--c: ${TINT.scrapyard}"><path class="case" d="${link}"/><path d="${link}"/>` +
+            `<circle cx="${n1(tree[0])}" cy="${n1(tree[1])}" r="3"/><circle cx="${n1(st.dbTop[0])}" cy="${n1(st.dbTop[1])}" r="3"/></g>`;
+        let body = floor + st.under + (st.d < tableDepth ? st.s + table : table + st.s) + st.layer + linked + m1.layer + m2.layer + m3.layer;
 
         const scene = {y0: bb.y0};
         body += layout([
-            {t: st.bench, act: "GENERATE IMAGES", name: "Image Bench", hash: "image-bench"},
-            {t: m1.at(34, 39), act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
-            {t: m1.at(196, 41), act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
-            {t: m2.at(212, 126), act: "READ FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
-            {t: m3.at(85, 100), act: "PLAY MUSIC", name: "Silent Night V6 Mod", hash: "silentnight"},
-            {t: m3.at(262, 14), act: "WATCH PHOTOS", name: "Large Slideshow Gadget", hash: "slideshow"}
+            {t: st.bench, c: TINT.bench, act: "GENERATE IMAGES", name: "Image Bench", hash: "image-bench"},
+            {t: m1.at(66, 38), c: TINT.scrapyard, act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
+            {t: m1.at(196, 41), c: TINT.ishell, act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
+            {t: m2.at(212, 126), c: TINT.news, act: "READ FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
+            {t: m2.far[0](146, 34), c: TINT.emacs, act: "USE ORG MODE", name: "&#961;Emacs", hash: "rho"},
+            {t: m3.at(85, 100), c: TINT.silent, act: "PLAY MUSIC FROM FS", name: "Silent Night V6 Mod", hash: "silentnight"},
+            {t: m3.at(262, 14), c: TINT.slideshow, act: "WATCH PHOTOS", name: "Large Slideshow Gadget", hash: "slideshow"}
         ], scene.y0 - 40, -66, [-1, 1]);
         body += layout([
-            {t: m1.at(56, 106, 1), c: TINT.tabs, act: "SWITCH TAB GROUPS", name: "Lightning Tab Groups", hash: "lightning-tab-groups"},
-            {t: m1.at(190, 146, 0.5), c: TINT.torrent, act: "SEND TORRENTS", name: "Add Torrent To", hash: "torrent-add"},
-            {t: m2.at(86, 63, 1), c: TINT.enso, act: "COMMAND YOUR PC", name: "Enso Open-Source", hash: "enso"},
-            {t: m3.at(117, 162, 1), c: TINT.retreat, act: "TAKE A BREAK", name: "Enso Retreat", hash: "retreat"},
-            {t: m3.at(278, 146), act: "TRACK DAYLIGHT", name: "Sunlight World Map", hash: "sunlight"},
-            {t: mic.target, act: "COMMAND BY VOICE", name: "Scarlett", hash: "scarlett"}
-        ], frontY + 62, 66, [1, -1]);
+            {t: m1.far[0](56, 108), c: TINT.tabs, act: "SWITCH TAB GROUPS", name: "Lightning Tab Groups", hash: "lightning-tab-groups"},
+            {t: m1.far[1](190, 148), c: TINT.torrent, act: "SEND TORRENTS", name: "Add Torrent To", hash: "torrent-add"},
+            {t: m2.far[0](34, 58), c: TINT.enso, act: "COMMAND YOUR PC", name: "Enso Open-Source", hash: "enso"},
+            {t: m3.far[0](117, 162), c: TINT.retreat, act: "TAKE A BREAK", name: "Enso Retreat", hash: "retreat"},
+            {t: m3.at(278, 146), c: TINT.sunlight, act: "TRACK DAYLIGHT", name: "Sunlight World Map", hash: "sunlight"},
+            {t: mic.target, c: TINT.scarlett, act: "COMMAND BY VOICE", name: "Scarlett", hash: "scarlett"}
+        ], Math.max(frontY + 62, m1.low + 46, m2.low + 46, m3.low + 46), 66, [1, -1]);
         body += layout([
             {t: st.xcv, c: TINT.server, act: "EXTRACT RSS FEEDS", name: "Feedxcavator", hash: "feedxcavator"},
-            {t: st.db, act: "STORE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"}
+            {t: st.db, c: TINT.scrapyard, act: "STORE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"}
         ], st.y1 + 46, 66, [-1, 1]);
 
         const PAD = 80;
@@ -437,10 +457,11 @@
         const panel = document.createElement("div");
         panel.style.cssText = "position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:14px;" +
             "padding:8px 14px;background:#000c;border:1px solid #fff3;font:12px monospace;color:#ccc";
-        const ranges = {yaw: [-60, 60], pitch: [0, 60], spread: [0, 35], explode: [30, 260]};
+        const ranges = {yaw: [-60, 60], pitch: [0, 60], spread: [0, 35], explode: [0.2, 2]};
         for (const key of Object.keys(ranges)) {
             const label = document.createElement("label"), input = document.createElement("input"), value = document.createElement("span");
             input.type = "range";
+            input.step = key === "explode" ? 0.05 : 1;
             [input.min, input.max] = ranges[key];
             input.value = VIEW[key];
             value.textContent = " " + VIEW[key];
