@@ -323,7 +323,7 @@
     }
 
     // puts the callouts of one band into rows so that neither labels nor leaders collide
-    function layout(items, baseY, step, sides) {
+    function layout(items, baseY, step, sides, blocks) {
         const placed = [];
         const overlap = (a, b) => a.x0 < b.x1 + 18 && b.x0 < a.x1 + 18;
         // does the leader of one label cross the text of another?
@@ -334,14 +334,15 @@
             const xAt = y => lead.ax + (lead.tx - lead.ax) * (y - lead.y) / (lead.ty - lead.y);
             return Math.min(xAt(ya), xAt(yb)) - 8 < label.x1 && label.x0 < Math.max(xAt(ya), xAt(yb)) + 8;
         };
-        const clash = c => placed.some(q => q.r === c.r ? overlap(q, c) : crosses(c, q) || crosses(q, c));
+        const blocked = c => (blocks || []).some(b => c.x0 < b.x1 + 14 && b.x0 < c.x1 + 14 && c.y - 26 < b.y1 && b.y0 < c.y + 30);
+        const clash = c => blocked(c) || placed.some(q => q.r === c.r ? overlap(q, c) : crosses(c, q) || crosses(q, c));
         let out = "";
         items.sort((a, b) => a.t[0] - b.t[0]);
         for (const it of items) {
             const w = Math.max(it.act.length * 8.8, it.name.length * 9.6) + 16;
             let c = null;
             for (let r = 0; r < 8 && !c; r++)
-                for (const gap of [26, 70, 120, 180, 240])
+                for (const gap of [26, 70, 120, 180, 240, 300])
                     for (const side of sides) {
                         if (c) break;
                         const x0 = side < 0 ? it.t[0] - gap - w : it.t[0] + gap;
@@ -385,6 +386,33 @@
             for (const z of [-Z + 14, Z - 32])
                 legs.push({d: depth([x, 165, z]), s: box(T, [x, 0, z], [x + 18, TOP - 16, z + 18], {l: 33})});
         legs.push({d: depth([635, 315, -Z + 20]), s: box(T, [X0 + 32, TOP - 44, -Z + 18], [X1 - 32, TOP - 16, -Z + 28], {l: 30})});
+        // the PC: a tower under the right end of the table
+        const TX = 1004, TW = 90, TH = 215, TZ0 = -112, TZ1 = 95;
+        let tower = shadow([[TX + 6, 0, TZ0 - 14], [TX + TW + 26, 0, TZ0 - 14], [TX + TW + 26, 0, TZ1 - 4], [TX + 6, 0, TZ1 - 4]], 4, "#000", 0.55) +
+            box(T, [TX, 0, TZ0], [TX + TW, TH, TZ1], {l: 28}) +
+            plane([TX, TH, TZ1 + 0.2], [1, 0, 0], [0, -1, 0],
+                `<circle cx="45" cy="13" r="4.500" fill="oklch(12% 0.006 265)" stroke="${ACCENT}" stroke-width="1.200"/>` +
+                `<path d="M14 10h8v6h-8zM26 10h8v6h-8zM60 11h5v4h-5zM68 11h5v4h-5z" fill="oklch(10% 0.006 265)" stroke="oklch(48% 0.008 265)" stroke-width=".6"/>` +
+                `<rect x="9" y="28" width="72" height="158" rx="3" fill="oklch(11% 0.006 265)" stroke="oklch(38% 0.008 265)"/>` +
+                FAN(45, 58, 22) + FAN(45, 107, 22) + FAN(45, 156, 22) +
+                `<path d="M12 33H78M12 39H78M12 45H78M12 51H78M12 57H78M12 63H78M12 69H78M12 75H78M12 81H78M12 87H78M12 93H78M12 99H78M12 105H78M12 111H78M12 117H78M12 123H78M12 129H78M12 135H78M12 141H78M12 147H78M12 153H78M12 159H78M12 165H78M12 171H78M12 177H78M12 183H78" stroke="oklch(30% 0.008 265)" stroke-width="2.400" stroke-dasharray="2.400 3.600"/>` +
+                `<path class="b dim" d="M30 201h30" stroke-width="2"/>`);
+        if (sy > 0.02)   // the glass side panel faces the camera only when looking from the right
+            tower += plane([TX + TW + 0.2, TH, TZ1], [0, 0, -1], [0, -1, 0],
+                `<rect x="10" y="12" width="${TZ1 - TZ0 - 20}" height="180" rx="2" fill="oklch(12% 0.012 265)" stroke="oklch(42% 0.008 265)"/>` +
+                `<path d="M24 96h110" stroke="${ACCENT}" stroke-width="3" stroke-linecap="round" stroke-opacity=".7"/>` +
+                `<rect x="24" y="102" width="130" height="22" fill="oklch(19% 0.008 265)"/>` +
+                `<rect x="150" y="30" width="34" height="56" fill="oklch(17% 0.008 265)"/>` +
+                `<path d="M10 12L70 192" stroke="#fff" stroke-opacity=".05" stroke-width="26"/>`);
+        // the part of the picture the tower takes up below the table, so that no label lands on it
+        const towerBox = {x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9};
+        for (const x of [TX, TX + TW]) for (const y of [0, TH]) for (const z of [TZ0, TZ1]) {
+            const q = P([x, y, z]);
+            towerBox.x0 = Math.min(towerBox.x0, q[0]); towerBox.x1 = Math.max(towerBox.x1, q[0]);
+            towerBox.y0 = Math.min(towerBox.y0, q[1]); towerBox.y1 = Math.max(towerBox.y1, q[1]);
+        }
+        legs.push({d: depth([TX + TW / 2, TH / 2, 0]),
+            s: tower});
         legs.sort((a, b) => a.d - b.d);
 
         const a = VIEW.spread, cx = 600, edge = 158;
@@ -435,7 +463,7 @@
             {t: m3.far[0](117, 162), c: TINT.retreat, act: "TAKE A BREAK", name: "Enso Retreat", hash: "retreat"},
             {t: m3.at(278, 146), c: TINT.sunlight, act: "TRACK DAYLIGHT", name: "Sunlight World Map", hash: "sunlight"},
             {t: mic.target, c: TINT.scarlett, act: "COMMAND BY VOICE", name: "Scarlett", hash: "scarlett"}
-        ], Math.max(frontY + 62, m1.low + 46, m2.low + 46, m3.low + 46), 66, [1, -1]);
+        ], Math.max(frontY + 62, m1.low + 46, m2.low + 46, m3.low + 46), 66, [1, -1], [towerBox]);
         body += layout([
             {t: st.xcv, c: TINT.server, act: "EXTRACT RSS FEEDS", name: "Feedxcavator", hash: "feedxcavator"},
             {t: st.db, c: TINT.scrapyard, act: "STORE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"}
