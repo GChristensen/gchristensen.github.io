@@ -461,7 +461,7 @@
             {t: st.bench, c: TINT.bench, act: "GENERATE IMAGES", name: "Image Bench", hash: "image-bench"},
             {t: m1.at(66, 38), c: TINT.scrapyard, act: "MANAGE BOOKMARKS", name: "Scrapyard", hash: "scrapyard"},
             {t: m1.at(196, 41), c: TINT.ishell, act: "COMMAND YOUR BROWSER", name: "iShell", hash: "ishell"},
-            {t: m2.at(212, 126), c: TINT.news, act: "READ RSS FEEDS", name: "NewsBlurMod", hash: "NewsBlurMod"},
+            {t: m2.at(212, 126), c: TINT.news, act: "READ RSS FEEDS", name: "NewsSharp", hash: "NewsSharp"},
             {t: m2.far[0](146, 34), c: TINT.emacs, act: "USE ORG MODE", name: "&#961;Emacs", hash: "rho"},
             {t: m3.at(85, 100), c: TINT.silent, act: "PLAY MUSIC FROM FS", name: "Silent Night V6 Mod", hash: "silentnight"},
             {t: m3.at(262, 14), c: TINT.slideshow, act: "WATCH PHOTOS", name: "Large Slideshow Gadget", hash: "slideshow"}
